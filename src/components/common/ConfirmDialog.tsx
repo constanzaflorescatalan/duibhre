@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 interface Props {
@@ -8,6 +8,8 @@ interface Props {
   confirmLabel: string;
   cancelLabel?: string;
   danger?: boolean;
+  /** Si se indica, hay que escribir este texto para habilitar la confirmación. */
+  confirmText?: string;
   onConfirm: () => void;
   onCancel: () => void;
 }
@@ -20,12 +22,16 @@ export function ConfirmDialog({
   confirmLabel,
   cancelLabel = 'Cancelar',
   danger = false,
+  confirmText,
   onConfirm,
   onCancel,
 }: Props) {
   const titleId = useId();
   const textId = useId();
   const cancelRef = useRef<HTMLButtonElement>(null);
+  const inputId = useId();
+  const [typed, setTyped] = useState('');
+  const canConfirm = !confirmText || typed.trim() === confirmText;
 
   useEffect(() => {
     if (!open) return;
@@ -58,14 +64,40 @@ export function ConfirmDialog({
         <p id={textId} className="dialog__text">
           {message}
         </p>
+        {confirmText && (
+          <label className="form-field" htmlFor={inputId}>
+            <span className="form-field__label">
+              Escribe <strong>{confirmText}</strong> para confirmar
+            </span>
+            <input
+              id={inputId}
+              className="input"
+              autoComplete="off"
+              value={typed}
+              onChange={(e) => setTyped(e.target.value)}
+            />
+          </label>
+        )}
         <div className="dialog__actions">
-          <button ref={cancelRef} type="button" className="btn btn--secondary" onClick={onCancel}>
+          <button
+            ref={cancelRef}
+            type="button"
+            className="btn btn--secondary"
+            onClick={() => {
+              setTyped('');
+              onCancel();
+            }}
+          >
             {cancelLabel}
           </button>
           <button
             type="button"
             className={`btn ${danger ? 'btn--danger-solid' : 'btn--primary'}`}
-            onClick={onConfirm}
+            disabled={!canConfirm}
+            onClick={() => {
+              setTyped('');
+              onConfirm();
+            }}
           >
             {confirmLabel}
           </button>

@@ -1,6 +1,7 @@
-import { HardDrive, ShieldCheck, UserRound } from 'lucide-react';
+import { UserRound } from 'lucide-react';
 import { useState } from 'react';
 import { Page, PageHeader } from '../components/common/Page';
+import { DataSection } from '../components/profile/DataSection';
 import { StageNotice } from '../components/common/StageNotice';
 import { UI } from '../config/uiCopy';
 import { countFavorites, countPersonalEntries } from '../data/repositories/entries';
@@ -12,6 +13,7 @@ import { isReduceMotionOn, setReduceMotion } from '../utils/accessibility';
 
 /** Perfil `/perfil` (secciones 7.11 y 11). Espacio privado, no red social. */
 export function ProfilePage() {
+  const [version, setVersion] = useState(0);
   const stats = useAsync(
     async () => ({
       entries: await countPersonalEntries(),
@@ -19,7 +21,7 @@ export function ProfilePage() {
       favorites: await countFavorites(),
       events: await countEvents(),
     }),
-    [],
+    [version],
   );
   const [reduceMotion, setReduce] = useState(isReduceMotionOn());
 
@@ -110,29 +112,7 @@ export function ProfilePage() {
         </p>
       </section>
 
-      <section className="profile-section">
-        <h2 className="section-title">Privacidad y datos</h2>
-        <p className="notice-line">
-          <HardDrive size={18} aria-hidden="true" />
-          {UI.localDataNotice}. Limpiar el navegador o cambiar de dispositivo puede borrar tus páginas si no
-          tienes un respaldo.
-        </p>
-        <div className="button-row button-row--wrap">
-          <button type="button" className="btn btn--secondary" disabled title={UI.stage2}>
-            Exportar mis datos
-          </button>
-          <button type="button" className="btn btn--secondary" disabled title={UI.stage2}>
-            Importar respaldo
-          </button>
-          <button type="button" className="btn btn--danger" disabled title={UI.stage2}>
-            Borrar mis datos
-          </button>
-        </div>
-        <p className="notice-line">
-          <ShieldCheck size={18} aria-hidden="true" />
-          Tus datos personales son privados por defecto y no se envían a ningún servidor.
-        </p>
-      </section>
+      <DataSection onChanged={() => setVersion((v) => v + 1)} />
 
       <section className="profile-section">
         <h2 className="section-title">Ilustraciones</h2>
