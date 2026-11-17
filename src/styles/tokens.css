@@ -1,0 +1,54 @@
+/* Tokens de diseño DUIBHRÉ (sección 2.3). Ajustables contra los artes reales. */
+:root {
+  --ink-night: #0b0f0d;
+  --forest-deep: #12261d;
+  --forest-middle: #264739;
+  --parchment: #e2d9c8;
+  --paper-light: #f3eddf;
+  --ink-brown: #352b24;
+  --ink-soft: #5a4b3f;
+  --antique-gold: #a88a57;
+  --gold-light: #d2b77f;
+  --moss: #768b72;
+  --ritual-purple: #6b3e65;
+  --leaf-glow: #8fc6a0;
+  --danger: #8a2f2a;
+
+  --font-display: 'Cinzel Decorative', 'Cormorant Garamond', Georgia, serif;
+  --font-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --font-italic: 'Crimson Text', 'Cormorant Garamond', Georgia, serif;
+  --font-ui: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+
+  --tap: 44px;
+  --nav-height: 68px;
+  --topbar-height: 56px;
+  --content-max: 720px;
+
+  --shadow-page: 0 1px 0 rgba(255, 255, 255, 0.4) inset, 0 10px 30px rgba(0, 0, 0, 0.35);
+  --focus-ring: 0 0 0 3px var(--paper-light), 0 0 0 5px var(--forest-middle);
+
+  --t-page: 220ms;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --t-page: 0ms;
+  }
+}
+
+:root[data-reduce-motion='true'] {
+  --t-page: 0ms;
+}
