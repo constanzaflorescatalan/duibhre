@@ -14,6 +14,8 @@ export function logicalParent(pathname: string): string {
   if (parts[0] === 'fichas' && parts[2] === 'editar') return `/fichas/${parts[1]}`;
   if (parts[0] === 'fichas') return '/indice';
   if (parts[0] === 'crear' && parts.length > 1) return '/crear';
+  if (parts[0] === 'bitacora' && parts[2] === 'editar') return `/bitacora/${parts[1]}`;
+  if (parts[0] === 'bitacora' && parts.length > 1) return '/bitacora';
   return '/inicio';
 }
 

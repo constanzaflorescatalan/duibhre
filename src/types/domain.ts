@@ -121,6 +121,11 @@ export interface JournalRecord {
   mediaIds: string[];
   tags: string[];
   isPrivate: boolean;
+  isFavorite?: boolean;
+  /** Emociones o estado de ánimo (opcional). */
+  mood?: string;
+  /** Fecha de seguimiento opcional (ISO); en la Etapa 3 podrá crear un evento. */
+  followUpAt?: string;
   createdAt: string;
   updatedAt: string;
 }

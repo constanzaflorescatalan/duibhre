@@ -163,11 +163,20 @@ export async function setArchived(id: string, archived: boolean): Promise<void> 
   });
 }
 
-/** Elimina la ficha y sus imágenes. No toca otras fichas ni registros de bitácora. */
+/**
+ * Elimina la ficha y sus imágenes. Las memorias de la Bitácora vinculadas se
+ * conservan: solo se desvinculan de esta ficha.
+ */
 export async function deleteEntry(id: string): Promise<void> {
-  await db.transaction('rw', db.entries, db.blobs, async () => {
+  await db.transaction('rw', db.entries, db.blobs, db.journal, async () => {
     const entry = await db.entries.get(id);
     if (!entry) return;
+    await db.journal
+      .where('linkedEntryIds')
+      .equals(id)
+      .modify((record) => {
+        record.linkedEntryIds = record.linkedEntryIds.filter((linked) => linked !== id);
+      });
     for (const media of entry.media) {
       if (media.originalBlobId) await db.blobs.delete(media.originalBlobId);
       if (media.illustratedBlobId) await db.blobs.delete(media.illustratedBlobId);
