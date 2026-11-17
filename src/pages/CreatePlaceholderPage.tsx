@@ -4,22 +4,6 @@ import { UI } from '../config/uiCopy';
 import { useBack } from '../hooks/useBack';
 
 const CONTENT = {
-  nota: {
-    title: UI.pages.createNote.title,
-    stage: 2 as const,
-    fields: [
-      'Título',
-      'Fecha y hora (por defecto, hora local editable)',
-      'Tipo: sueño, ritual, tirada, meditación, recuerdo u otro',
-      'Texto libre',
-      'Emociones (opcional)',
-      'Fotos',
-      'Ficha relacionada (opcional)',
-      'Etiquetas',
-      'Fecha próxima (opcional)',
-    ],
-    notice: 'Guardar memorias en la Bitácora y vincularlas a fichas se habilita en la Etapa 2.',
-  },
   evento: {
     title: UI.pages.createEvent.title,
     stage: 3 as const,

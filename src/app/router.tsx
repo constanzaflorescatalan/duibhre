@@ -9,9 +9,11 @@ import { EntryFormPage } from '../pages/EntryFormPage';
 import { EntryPage } from '../pages/EntryPage';
 import { HomePage } from '../pages/HomePage';
 import { IndexPage } from '../pages/IndexPage';
+import { JournalFormPage } from '../pages/JournalFormPage';
 import { JournalPage } from '../pages/JournalPage';
 import { NotFoundPage } from '../pages/NotFoundPage';
 import { ProfilePage } from '../pages/ProfilePage';
+import { RecordPage } from '../pages/RecordPage';
 import { SearchPage } from '../pages/SearchPage';
 import { SubtopicPage } from '../pages/SubtopicPage';
 
@@ -29,10 +31,12 @@ export const routes: RouteObject[] = [
       { path: '/fichas/:entryId/editar', element: <EntryFormPage mode="edit" /> },
       { path: '/crear', element: <CreatePage /> },
       { path: '/crear/ficha', element: <EntryFormPage mode="create" /> },
-      { path: '/crear/nota', element: <CreatePlaceholderPage kind="nota" /> },
+      { path: '/crear/nota', element: <JournalFormPage mode="create" /> },
       { path: '/crear/evento', element: <CreatePlaceholderPage kind="evento" /> },
       { path: '/agenda', element: <AgendaPage /> },
       { path: '/bitacora', element: <JournalPage /> },
+      { path: '/bitacora/:recordId', element: <RecordPage /> },
+      { path: '/bitacora/:recordId/editar', element: <JournalFormPage mode="edit" /> },
       { path: '/buscar', element: <SearchPage /> },
       { path: '/perfil', element: <ProfilePage /> },
       { path: '*', element: <NotFoundPage /> },

@@ -8,6 +8,8 @@ import { CHAPTERS } from '../config/chapters';
 import { FAMILIES, isFamilyId } from '../config/families';
 import { UI } from '../config/uiCopy';
 import { listPersonalEntries, listSeedEntries } from '../data/repositories/entries';
+import { JournalCard } from '../components/journal/JournalCard';
+import { listJournalRecords } from '../data/repositories/journal';
 import { useAsync } from '../hooks/useAsync';
 import { matches } from '../utils/search';
 
@@ -21,6 +23,7 @@ export function SearchPage() {
   const familyParam = params.get('familia');
   const family = isFamilyId(familyParam) ? familyParam : '';
   const personal = useAsync(() => listPersonalEntries(), []);
+  const records = useAsync(listJournalRecords, []);
 
   const sync = (q: string, f: string) => {
     const next: Record<string, string> = {};
@@ -51,7 +54,11 @@ export function SearchPage() {
           matches(query, [e.title, e.description, ...e.tags, ...Object.values(e.extraFields).map(String)]),
       )
     : [];
-  const total = chapterHits.length + subtopicHits.length + entryHits.length;
+  const recordHits =
+    hasQuery && !family && records.status === 'success'
+      ? records.data.filter((r) => matches(query, [r.title, r.body, r.mood, ...r.tags]))
+      : [];
+  const total = chapterHits.length + subtopicHits.length + entryHits.length + recordHits.length;
 
   return (
     <Page>
@@ -135,6 +142,18 @@ export function SearchPage() {
                         {chapter.romanNumeral} · {chapter.title}
                       </span>
                     </Link>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+          {recordHits.length > 0 && (
+            <>
+              <h2 className="section-title">Memorias</h2>
+              <ul className="journal-list">
+                {recordHits.map((r) => (
+                  <li key={r.id}>
+                    <JournalCard record={r} />
                   </li>
                 ))}
               </ul>

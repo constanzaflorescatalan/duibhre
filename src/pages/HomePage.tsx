@@ -5,7 +5,8 @@ import { Page, PageHeader } from '../components/common/Page';
 import { MoonPhases } from '../components/ornaments/Ornaments';
 import { UI } from '../config/uiCopy';
 import { countPersonalEntries } from '../data/repositories/entries';
-import { countJournalRecords } from '../data/repositories/journal';
+import { countJournalRecords, listJournalRecords } from '../data/repositories/journal';
+import { JournalCard } from '../components/journal/JournalCard';
 import { useAsync } from '../hooks/useAsync';
 
 /**
@@ -17,6 +18,7 @@ export function HomePage() {
     async () => ({ entries: await countPersonalEntries(), records: await countJournalRecords() }),
     [],
   );
+  const lastRecord = useAsync(async () => (await listJournalRecords())[0], []);
   const isEmpty = counts.status === 'success' && counts.data.entries === 0 && counts.data.records === 0;
 
   return (
@@ -61,7 +63,11 @@ export function HomePage() {
 
         <section className="home-card">
           <h2 className="home-card__title">Mi última página</h2>
-          <p className="home-card__text">Tus memorias aparecerán aquí cuando escribas la primera.</p>
+          {lastRecord.status === 'success' && lastRecord.data ? (
+            <JournalCard record={lastRecord.data} />
+          ) : (
+            <p className="home-card__text">Tus memorias aparecerán aquí cuando escribas la primera.</p>
+          )}
           <Link to="/bitacora" className="btn btn--secondary">
             <Feather size={18} aria-hidden="true" />
             Ver mi bitácora

@@ -28,6 +28,8 @@ import {
   setArchived,
   toggleFavorite,
 } from '../data/repositories/entries';
+import { JournalCard } from '../components/journal/JournalCard';
+import { listRecordsForEntry } from '../data/repositories/journal';
 import { useAsync } from '../hooks/useAsync';
 import { formatDate } from '../utils/dates';
 import { NotFoundPage } from './NotFoundPage';
@@ -49,6 +51,7 @@ export function EntryPage() {
     const list = await Promise.all((entry?.relatedEntryIds ?? []).map((id) => getEntry(id)));
     return list.filter((e) => e !== undefined);
   }, [entryId, version]);
+  const notes = useAsync(() => listRecordsForEntry(entryId), [entryId, version]);
   const [section, setSection] = useState<Section>('conocimiento');
   const baseId = useId();
 
@@ -160,15 +163,10 @@ export function EntryPage() {
             </button>
           </>
         )}
-        <button
-          type="button"
-          className="btn btn--secondary btn--small"
-          disabled
-          title="Disponible próximamente"
-        >
+        <Link to={`/crear/nota?ficha=${entry.id}`} className="btn btn--secondary btn--small">
           <NotebookPen size={18} aria-hidden="true" />
           Añadir nota
-        </button>
+        </Link>
         <button
           type="button"
           className="btn btn--secondary btn--small"
@@ -257,10 +255,28 @@ export function EntryPage() {
           </div>
         )}
         {section === 'anotaciones' && (
-          <EmptyState
-            title={UI.empty.notes.title}
-            description="Las notas que escribas aquí vivirán en esta ficha y también en tu Bitácora, sin duplicarse."
-          />
+          <>
+            <h2 className="section-title">Memorias vinculadas</h2>
+            {notes.status === 'success' && notes.data.length > 0 ? (
+              <ul className="journal-list">
+                {notes.data.map((r) => (
+                  <li key={r.id}>
+                    <JournalCard record={r} />
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <EmptyState
+                title={UI.empty.notes.title}
+                description="Las notas que escribas aquí vivirán en esta ficha y también en tu Bitácora, sin duplicarse."
+                action={
+                  <Link to={`/crear/nota?ficha=${entry.id}`} className="btn btn--primary">
+                    {UI.empty.notes.action}
+                  </Link>
+                }
+              />
+            )}
+          </>
         )}
 
         {section === 'relaciones' &&

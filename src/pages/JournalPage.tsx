@@ -7,7 +7,7 @@ import { UI } from '../config/uiCopy';
 import { listJournalRecords } from '../data/repositories/journal';
 import { useAsync } from '../hooks/useAsync';
 import type { NoteKind } from '../types/domain';
-import { formatDate } from '../utils/dates';
+import { JournalCard } from '../components/journal/JournalCard';
 
 type JournalFilter = 'todos' | 'favoritos' | NoteKind;
 
@@ -29,9 +29,12 @@ export function JournalPage() {
   const [filter, setFilter] = useState<JournalFilter>('todos');
   const records = useAsync(listJournalRecords, []);
   const all = records.status === 'success' ? records.data : [];
-  const visible = all.filter((r) =>
-    filter === 'todos' || filter === 'favoritos' ? filter === 'todos' : r.kind === filter,
-  );
+  const visible = all.filter((r) => {
+    if (filter === 'todos') return true;
+    if (filter === 'favoritos') return Boolean(r.isFavorite);
+    if (filter === 'otro') return r.kind === 'otro' || r.kind === 'recuerdo' || r.kind === 'observacion';
+    return r.kind === filter;
+  });
 
   return (
     <Page>
@@ -68,15 +71,14 @@ export function JournalPage() {
       ) : visible.length > 0 ? (
         <ul className="journal-list">
           {visible.map((r) => (
-            <li key={r.id} className="journal-leaf">
-              <p className="journal-leaf__date">{formatDate(r.date)}</p>
-              <p className="journal-leaf__title">{r.title}</p>
+            <li key={r.id}>
+              <JournalCard record={r} />
             </li>
           ))}
         </ul>
       ) : (
         <EmptyState
-          title={UI.empty.notes.title}
+          title={all.length > 0 ? 'No hay memorias con este filtro' : UI.empty.notes.title}
           action={
             <Link to="/crear/nota" className="btn btn--primary">
               {UI.empty.notes.action}

@@ -723,19 +723,6 @@
   gap: var(--space-3);
 }
 
-.journal-leaf {
-  padding: var(--space-4);
-  border-radius: 2px;
-  background: var(--paper-light);
-  box-shadow: 0 2px 6px rgba(53, 43, 36, 0.15);
-}
-
-.journal-leaf__date {
-  font-family: var(--font-ui);
-  font-size: 0.8rem;
-  color: var(--moss);
-}
-
 .journal-leaf__title {
   font-family: var(--font-italic);
   font-style: italic;
@@ -832,4 +819,130 @@
 
 .personal-notes__text {
   white-space: pre-wrap;
+}
+
+/* ---------- Bitácora: memorias ---------- */
+.journal-leaf {
+  position: relative;
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-4) var(--space-6) var(--space-4) var(--space-4);
+  border-radius: 2px;
+  background:
+    repeating-linear-gradient(180deg, transparent 0 27px, rgba(118, 139, 114, 0.18) 27px 28px),
+    var(--paper-light);
+  box-shadow: 0 2px 6px rgba(53, 43, 36, 0.15);
+  border-left: 3px solid var(--antique-gold);
+  color: inherit;
+  text-decoration: none;
+  transform: rotate(-0.3deg);
+}
+
+.journal-list li:nth-child(even) .journal-leaf {
+  transform: rotate(0.3deg);
+}
+
+.journal-leaf:hover {
+  box-shadow:
+    0 2px 6px rgba(53, 43, 36, 0.15),
+    0 0 0 3px rgba(143, 198, 160, 0.3);
+}
+
+.journal-leaf__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  color: var(--moss);
+}
+
+.journal-leaf__meta svg {
+  color: var(--ritual-purple);
+}
+
+.journal-leaf__excerpt {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  color: var(--ink-soft);
+}
+
+.journal-leaf__links {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  color: var(--forest-middle);
+}
+
+.journal-leaf__arrow {
+  position: absolute;
+  right: var(--space-3);
+  top: 50%;
+  translate: 0 -50%;
+  color: var(--antique-gold);
+}
+
+.journal-page {
+  margin: var(--space-4) 0;
+  padding: var(--space-5) var(--space-4);
+  background:
+    repeating-linear-gradient(180deg, transparent 0 31px, rgba(118, 139, 114, 0.2) 31px 32px),
+    var(--paper-light);
+  border-left: 3px solid var(--antique-gold);
+  border-radius: 2px;
+  box-shadow: 0 2px 8px rgba(53, 43, 36, 0.12);
+}
+
+.journal-page__body {
+  font-family: var(--font-italic);
+  font-size: 1.2rem;
+  line-height: 32px;
+  white-space: pre-wrap;
+}
+
+.input--journal {
+  font-family: var(--font-italic);
+  font-size: 1.15rem;
+  line-height: 1.6;
+}
+
+.form-row {
+  display: grid;
+  gap: 0 var(--space-3);
+}
+
+@media (min-width: 480px) {
+  .form-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.linked-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: var(--space-3) 0;
+  padding: 0;
+  list-style: none;
+}
+
+.linked-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding-left: var(--space-3);
+  border-radius: 999px;
+  border: 1px solid rgba(38, 71, 57, 0.5);
+  background: rgba(243, 237, 223, 0.8);
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+}
+
+.home-card .journal-leaf {
+  width: 100%;
 }

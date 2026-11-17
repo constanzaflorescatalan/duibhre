@@ -9,6 +9,8 @@ import { getChapter } from '../config/chapters';
 import { getFamily } from '../config/families';
 import { UI } from '../config/uiCopy';
 import { listPersonalEntries, listSeedEntries } from '../data/repositories/entries';
+import { JournalCard } from '../components/journal/JournalCard';
+import { listRecordsForEntries } from '../data/repositories/journal';
 import { useAsync } from '../hooks/useAsync';
 import type { GrimorioEntry } from '../types/domain';
 import { NotFoundPage } from './NotFoundPage';
@@ -42,6 +44,12 @@ export function ChapterPage() {
     () => (chapter ? listPersonalEntries(chapter.id) : Promise.resolve([])),
     [chapter?.id],
   );
+
+  const chapterNotes = useAsync(async () => {
+    if (!chapter) return [];
+    const ids = [...listSeedEntries(chapter.id), ...(await listPersonalEntries(chapter.id))].map((e) => e.id);
+    return listRecordsForEntries(ids);
+  }, [chapter?.id]);
 
   const seed = useMemo(() => (chapter ? listSeedEntries(chapter.id) : []), [chapter]);
 
@@ -193,17 +201,26 @@ export function ChapterPage() {
             />
           ))}
 
-        {tab === 'notas' && (
-          <EmptyState
-            title={UI.empty.notes.title}
-            description="Las notas que escribas en las fichas de este capítulo también aparecerán en tu Bitácora, sin duplicarse."
-            action={
-              <Link to="/crear/nota" className="btn btn--primary">
-                {UI.empty.notes.action}
-              </Link>
-            }
-          />
-        )}
+        {tab === 'notas' &&
+          (chapterNotes.status === 'success' && chapterNotes.data.length > 0 ? (
+            <ul className="journal-list">
+              {chapterNotes.data.map((r) => (
+                <li key={r.id}>
+                  <JournalCard record={r} />
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <EmptyState
+              title={UI.empty.notes.title}
+              description="Las notas que escribas en las fichas de este capítulo también aparecerán en tu Bitácora, sin duplicarse."
+              action={
+                <Link to="/crear/nota" className="btn btn--primary">
+                  {UI.empty.notes.action}
+                </Link>
+              }
+            />
+          ))}
       </div>
 
       <div className="page-footer-actions">
