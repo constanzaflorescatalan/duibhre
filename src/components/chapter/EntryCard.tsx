@@ -3,18 +3,24 @@ import { Link } from 'react-router-dom';
 import { getChapter, getSubtopic } from '../../config/chapters';
 import { UI } from '../../config/uiCopy';
 import type { GrimorioEntry } from '../../types/domain';
-import { ChapterGlyph } from '../ornaments/ChapterGlyph';
+import { useBlobUrl } from '../../hooks/useBlobUrl';
+import { ChapterArt } from '../ornaments/PaintedArt';
 
 /** Tarjeta de ficha en listas de capítulo, subtema y búsqueda. */
 export function EntryCard({ entry, showChapter = false }: { entry: GrimorioEntry; showChapter?: boolean }) {
   const chapter = getChapter(entry.chapterId);
   const subtopic = getSubtopic(entry.chapterId, entry.subtopicId);
   const hex = typeof entry.extraFields.hex === 'string' ? entry.extraFields.hex : undefined;
+  const photo = useBlobUrl(entry.media.find((m) => m.originalBlobId)?.originalBlobId);
 
   return (
     <Link to={`/fichas/${entry.id}`} className="entry-card">
-      <span className="entry-card__thumb" style={hex ? { background: hex } : undefined} aria-hidden="true">
-        {!hex && <ChapterGlyph chapterId={entry.chapterId} size={28} />}
+      <span
+        className={`entry-card__thumb${photo ? ' has-photo' : ''}`}
+        style={hex && !photo ? { background: hex } : undefined}
+        aria-hidden="true"
+      >
+        {photo ? <img src={photo} alt="" /> : !hex && <ChapterArt chapterId={entry.chapterId} />}
       </span>
       <span className="entry-card__body">
         <span className="entry-card__title">{entry.title}</span>

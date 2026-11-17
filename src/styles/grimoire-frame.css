@@ -1,0 +1,233 @@
+/*
+ * Estilo unificado de todas las pantallas interiores, a partir de la imagen
+ * elegida del índice: marco de cuero verde con filete dorado, pergamino
+ * envejecido con bordes quemados y láminas pintadas.
+ */
+
+/* ---------- Marco de cuero ---------- */
+.page-frame {
+  position: relative;
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 10px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--antique-gold);
+  background: radial-gradient(ellipse at 50% 30%, rgba(52, 92, 66, 0.5), transparent 70%), var(--forest-deep);
+  box-shadow:
+    0 14px 34px rgba(0, 0, 0, 0.45),
+    inset 0 0 30px rgba(0, 0, 0, 0.5);
+}
+
+.page-frame::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1px solid rgba(168, 138, 87, 0.45);
+  border-radius: calc(var(--radius-md) - 3px);
+  pointer-events: none;
+}
+
+.page-frame__corner {
+  position: absolute;
+  z-index: 2;
+  width: 14px;
+  height: 14px;
+  background: radial-gradient(circle, var(--gold-light) 0 2.5px, transparent 3px);
+  border: 1.5px solid var(--antique-gold);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.page-frame__corner--tl {
+  top: -4px;
+  left: -4px;
+}
+.page-frame__corner--tr {
+  top: -4px;
+  right: -4px;
+}
+.page-frame__corner--bl {
+  bottom: -4px;
+  left: -4px;
+}
+.page-frame__corner--br {
+  bottom: -4px;
+  right: -4px;
+}
+
+/* ---------- Pergamino envejecido ---------- */
+.page-frame > .page {
+  max-width: none;
+  border: 0;
+  outline: 1px solid rgba(168, 138, 87, 0.5);
+  outline-offset: -9px;
+  border-radius: 4px;
+  background:
+    radial-gradient(ellipse at 50% 18%, rgba(255, 255, 255, 0.5), transparent 60%),
+    radial-gradient(ellipse at 50% 50%, #f4ecd9 0%, #ece0c4 65%, #dcc8a0 100%);
+  box-shadow:
+    inset 0 0 28px rgba(120, 82, 34, 0.38),
+    inset 0 0 3px rgba(90, 60, 20, 0.5);
+}
+
+/* ---------- Láminas pintadas ---------- */
+.painted-art {
+  mix-blend-mode: multiply;
+}
+
+.chapter-header__plate {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 132px;
+  height: 92px;
+  margin: 0 auto var(--space-3);
+}
+
+.chapter-header__plate .painted-art {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  -webkit-mask-image: radial-gradient(ellipse at 50% 50%, #000 58%, transparent 74%);
+  mask-image: radial-gradient(ellipse at 50% 50%, #000 58%, transparent 74%);
+}
+
+.chapter-header__plate > svg {
+  width: 40px;
+  height: 40px;
+  color: var(--forest-middle);
+}
+
+.chapter-header__plate .chapter-header__numeral {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  translate: -50% 0;
+  min-width: 34px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--antique-gold);
+  background: var(--forest-deep);
+  color: var(--gold-light);
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.entry-card__thumb {
+  overflow: hidden;
+  width: 60px;
+  height: 52px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(168, 138, 87, 0.7);
+  background: #efe4cb;
+}
+
+.entry-card__thumb .painted-art,
+.entry-card__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.entry-card__thumb .painted-art {
+  object-fit: contain;
+}
+
+.entry-card,
+.home-card,
+.form-section,
+.calendar,
+.empty-state,
+.stage-notice {
+  background-color: rgba(250, 244, 230, 0.5);
+}
+
+.entry-card,
+.home-card,
+.calendar {
+  outline: 1px solid rgba(168, 138, 87, 0.3);
+  outline-offset: -4px;
+}
+
+/* ---------- Inicio: senderos ilustrados ---------- */
+.home-paths {
+  margin-bottom: var(--space-4);
+}
+
+.home-paths__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.path-tile {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  min-height: 96px;
+  padding: var(--space-2) var(--space-1);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(168, 138, 87, 0.75);
+  outline: 1px solid rgba(168, 138, 87, 0.3);
+  outline-offset: -4px;
+  background: rgba(250, 244, 230, 0.55);
+  color: var(--forest-deep);
+  text-decoration: none;
+  transition:
+    border-color 160ms,
+    box-shadow 160ms;
+}
+
+.path-tile:hover {
+  border-color: var(--forest-middle);
+  box-shadow: 0 0 0 3px rgba(184, 227, 154, 0.35);
+}
+
+.path-tile__art {
+  width: 100%;
+  max-width: 96px;
+  height: 58px;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  -webkit-mask-image: radial-gradient(ellipse at 50% 50%, #000 60%, transparent 76%);
+  mask-image: radial-gradient(ellipse at 50% 50%, #000 60%, transparent 76%);
+}
+
+.path-tile__name {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+/* ---------- Títulos de sección con hojita ---------- */
+.page .section-title::after {
+  width: 64px;
+  height: 6px;
+  background:
+    radial-gradient(ellipse 4px 2.5px at 10px 3px, var(--moss) 98%, transparent),
+    radial-gradient(ellipse 4px 2.5px at 22px 3px, var(--moss) 98%, transparent),
+    linear-gradient(var(--antique-gold), var(--antique-gold)) 0 50% / 100% 1px no-repeat;
+}
+
+/* ---------- Cabecera superior con filete dorado ---------- */
+.topbar {
+  border-bottom: 2px solid var(--antique-gold);
+  box-shadow: 0 1px 0 rgba(168, 138, 87, 0.35);
+}
+
+@media (min-width: 768px) {
+  .page-frame {
+    padding: 14px;
+  }
+}
+
+.page .tabs__tab {
+  padding-inline: 6px;
+  font-size: 0.98rem;
+}

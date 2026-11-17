@@ -1,14 +1,14 @@
 import type { Chapter } from '../../types/domain';
-import { ChapterGlyph } from '../ornaments/ChapterGlyph';
 import { Filigree } from '../ornaments/Ornaments';
+import { ChapterArt } from '../ornaments/PaintedArt';
 
-/** Cabecera ilustrada del capítulo: numeral romano, título y subtítulo. */
+/** Cabecera ilustrada del capítulo: lámina pintada, numeral romano, título y subtítulo. */
 export function ChapterHeader({ chapter, eyebrow }: { chapter: Chapter; eyebrow?: string }) {
   return (
     <header className="chapter-header">
-      <div className="chapter-header__seal" aria-hidden="true">
+      <div className="chapter-header__plate" aria-hidden="true">
+        <ChapterArt chapterId={chapter.id} />
         <span className="chapter-header__numeral">{chapter.romanNumeral}</span>
-        <ChapterGlyph chapterId={chapter.id} size={30} />
       </div>
       {eyebrow && <p className="page-header__eyebrow">{eyebrow}</p>}
       <h1 className="page-header__title">

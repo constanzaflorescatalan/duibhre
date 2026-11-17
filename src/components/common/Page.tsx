@@ -1,15 +1,24 @@
 import type { ReactNode } from 'react';
 import { CornerKnot, Filigree } from '../ornaments/Ornaments';
 
-/** Hoja de pergamino con esquinas de nudo celta. */
+/**
+ * Hoja de pergamino envejecido dentro de un marco de cuero verde con filete
+ * dorado, el mismo lenguaje visual del índice elegido.
+ */
 export function Page({ children, className = '' }: { children: ReactNode; className?: string }) {
   return (
-    <div className={`page ${className}`}>
-      <CornerKnot className="page__corner page__corner--tl" />
-      <CornerKnot className="page__corner page__corner--tr" />
-      <CornerKnot className="page__corner page__corner--bl" />
-      <CornerKnot className="page__corner page__corner--br" />
-      {children}
+    <div className="page-frame">
+      <span className="page-frame__corner page-frame__corner--tl" aria-hidden="true" />
+      <span className="page-frame__corner page-frame__corner--tr" aria-hidden="true" />
+      <span className="page-frame__corner page-frame__corner--bl" aria-hidden="true" />
+      <span className="page-frame__corner page-frame__corner--br" aria-hidden="true" />
+      <div className={`page ${className}`}>
+        <CornerKnot className="page__corner page__corner--tl" />
+        <CornerKnot className="page__corner page__corner--tr" />
+        <CornerKnot className="page__corner page__corner--bl" />
+        <CornerKnot className="page__corner page__corner--br" />
+        {children}
+      </div>
     </div>
   );
 }

@@ -16,7 +16,7 @@ import { EntryCard } from '../components/chapter/EntryCard';
 import { EmptyState } from '../components/common/EmptyState';
 import { Page } from '../components/common/Page';
 import { IllustrationPreview } from '../components/media/IllustrationPreview';
-import { ChapterGlyph } from '../components/ornaments/ChapterGlyph';
+import { ChapterArt } from '../components/ornaments/PaintedArt';
 import { Filigree } from '../components/ornaments/Ornaments';
 import { getChapter, getSubtopic } from '../config/chapters';
 import { ENTRY_TEMPLATES } from '../config/entryTemplates';
@@ -110,8 +110,8 @@ export function EntryPage() {
             </>
           )}
         </p>
-        <div className="entry-header__seal" aria-hidden="true">
-          <ChapterGlyph chapterId={chapter.id} size={34} />
+        <div className="chapter-header__plate" aria-hidden="true">
+          <ChapterArt chapterId={chapter.id} />
         </div>
         <h1 className="page-header__title">{entry.title}</h1>
         {typeof entry.extraFields.scientificName === 'string' && (

@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { EmptyState } from '../components/common/EmptyState';
 import { Page, PageHeader } from '../components/common/Page';
 import { MoonPhases } from '../components/ornaments/Ornaments';
+import { FAMILIES } from '../config/families';
+import { FAMILY_ART } from '../config/illustrations';
 import { UI } from '../config/uiCopy';
 import { countPersonalEntries } from '../data/repositories/entries';
 import { countJournalRecords, listJournalRecords } from '../data/repositories/journal';
@@ -41,6 +43,22 @@ export function HomePage() {
           }
         />
       )}
+
+      <nav className="home-paths" aria-labelledby="senderos-titulo">
+        <h2 id="senderos-titulo" className="section-title">
+          Senderos del grimorio
+        </h2>
+        <ul className="home-paths__grid">
+          {FAMILIES.map((f) => (
+            <li key={f.id}>
+              <Link to={`/indice?familia=${f.id}`} className="path-tile">
+                <img className="path-tile__art" src={FAMILY_ART[f.id].src} alt="" />
+                <span className="path-tile__name">{f.title}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
 
       <div className="home-grid">
         <section className="home-card">

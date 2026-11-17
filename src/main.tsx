@@ -16,6 +16,7 @@ import './styles/layout.css';
 import './styles/components.css';
 import './styles/pages.css';
 import './styles/index-wheel.css';
+import './styles/grimoire-frame.css';
 import { App } from './app/App';
 import { applyReduceMotion } from './utils/accessibility';
 
