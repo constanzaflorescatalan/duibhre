@@ -48,6 +48,8 @@ export interface Family {
   description: string;
   chapterIds: ChapterId[];
   illustrationKey: string;
+  /** Palabras clave breves bajo el nombre en la rueda (sección 3.1: etiquetas breves). */
+  sectorKeywords: [string, string?];
   /** Descripción de la ilustración pintada definitiva (para el equipo de arte). */
   illustrationBrief: string;
   /** Acceso secundario destacado del panel (p. ej. «Abrir mi bitácora»). */

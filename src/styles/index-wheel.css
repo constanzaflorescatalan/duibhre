@@ -1,0 +1,397 @@
+/*
+ * Índice con el estilo de la imagen elegida (03_Indice_Movil_Rueda_6_Familias_ELEGIDA):
+ * cuero verde con marco dorado, rueda pintada y panel de pergamino con lámina botánica.
+ * Se carga después de pages.css y sobrescribe los estilos base del índice.
+ */
+
+.leather-page {
+  position: relative;
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-3) var(--space-5);
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--antique-gold);
+  outline: 1px solid rgba(168, 138, 87, 0.45);
+  outline-offset: -7px;
+  background:
+    radial-gradient(ellipse at 50% 35%, rgba(52, 92, 66, 0.55), transparent 70%),
+    radial-gradient(ellipse at 50% 110%, rgba(0, 0, 0, 0.5), transparent 60%), var(--forest-deep);
+  box-shadow:
+    0 14px 34px rgba(0, 0, 0, 0.45),
+    inset 0 0 40px rgba(0, 0, 0, 0.45);
+  color: var(--paper-light);
+}
+
+.leather-page__corner {
+  position: absolute;
+  width: 34px;
+  height: 34px;
+  border-top: 2px solid var(--antique-gold);
+  border-left: 2px solid var(--antique-gold);
+  border-top-left-radius: 14px;
+  pointer-events: none;
+}
+
+.leather-page__corner::after {
+  content: '';
+  position: absolute;
+  inset: 5px auto auto 5px;
+  width: 12px;
+  height: 12px;
+  border: 1.5px solid var(--antique-gold);
+  border-radius: 50%;
+}
+
+.leather-page__corner--tl {
+  top: 10px;
+  left: 10px;
+}
+
+.leather-page__corner--tr {
+  top: 10px;
+  right: 10px;
+  transform: scaleX(-1);
+}
+
+.leather-header {
+  text-align: center;
+  margin: var(--space-3) 0 var(--space-3);
+}
+
+.leather-header__moons {
+  width: 150px;
+  margin: 0 auto var(--space-2);
+}
+
+.leather-header__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.45rem, 6.4vw, 2.1rem);
+  color: var(--gold-light);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
+}
+
+.leather-header__subtitle {
+  margin-top: var(--space-1);
+  font-family: var(--font-italic);
+  font-style: italic;
+  font-size: 1.1rem;
+  color: rgba(243, 237, 223, 0.85);
+}
+
+.filigree--light {
+  color: var(--antique-gold);
+}
+
+.leather-page .search-pill {
+  background: rgba(11, 15, 13, 0.45);
+  border-color: rgba(168, 138, 87, 0.65);
+  color: rgba(243, 237, 223, 0.8);
+}
+
+.leather-page .index-toggle {
+  color: var(--gold-light);
+  border-color: rgba(168, 138, 87, 0.7);
+}
+
+.leather-page > .btn--secondary {
+  margin-top: var(--space-2);
+}
+
+/* ---------- Rueda pintada ---------- */
+.leather-page .wheel {
+  width: min(100%, 420px);
+  margin: 0 auto var(--space-4);
+  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.45));
+}
+
+.wheel__art {
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+.leather-page .wheel__sector:hover .wheel__shape {
+  fill: #f3ead6;
+}
+
+.leather-page .wheel__label {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 22px;
+  fill: #20372b;
+  letter-spacing: 0;
+}
+
+.wheel__keywords {
+  font-family: var(--font-serif);
+  font-size: 10.5px;
+  font-weight: 600;
+  fill: #4a3d31;
+  pointer-events: none;
+}
+
+.leather-page .wheel__highlight {
+  stroke: #b8e39a;
+  stroke-width: 3;
+  filter: drop-shadow(0 0 6px rgba(210, 225, 140, 0.75));
+}
+
+/* ---------- Panel de pergamino ---------- */
+.leather-page .family-panel {
+  position: relative;
+  padding: var(--space-4) var(--space-3) var(--space-4);
+  border: 0;
+  border-radius: 6px;
+  color: var(--ink-brown);
+  background: radial-gradient(ellipse at 50% 40%, #f4ead2 0%, #eadcbc 60%, #d9c399 100%);
+  box-shadow:
+    inset 0 0 26px rgba(120, 82, 34, 0.45),
+    inset 0 0 3px rgba(90, 60, 20, 0.6),
+    0 10px 24px rgba(0, 0, 0, 0.4);
+  clip-path: polygon(
+    0% 1.2%,
+    6% 0%,
+    13% 1%,
+    22% 0.2%,
+    31% 1.1%,
+    40% 0%,
+    49% 0.9%,
+    58% 0.1%,
+    67% 1%,
+    76% 0%,
+    85% 1.1%,
+    93% 0.2%,
+    100% 1%,
+    99.4% 20%,
+    100% 40%,
+    99.3% 60%,
+    100% 80%,
+    99.5% 99%,
+    92% 100%,
+    83% 99.1%,
+    74% 100%,
+    65% 99.2%,
+    56% 100%,
+    47% 99%,
+    38% 100%,
+    29% 99.1%,
+    20% 100%,
+    11% 99.2%,
+    3% 100%,
+    0% 99%,
+    0.6% 80%,
+    0% 60%,
+    0.5% 40%,
+    0% 20%
+  );
+}
+
+.leather-page .family-panel__collapse {
+  top: var(--space-2);
+  right: var(--space-2);
+  width: var(--tap);
+  padding: 0;
+  justify-content: center;
+  color: var(--forest-deep);
+}
+
+.leather-page .family-panel__head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  margin: 0 var(--space-6) 0;
+  text-align: center;
+}
+
+.family-panel__sprig {
+  width: 40px;
+  height: 14px;
+  flex: none;
+}
+
+.leather-page .family-panel__title {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 1.9rem;
+  color: var(--forest-deep);
+}
+
+.leather-page .family-panel__subtitle {
+  text-align: center;
+  font-size: 1.02rem;
+  border-bottom: 1px solid rgba(168, 138, 87, 0.6);
+  padding-bottom: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.family-panel__body {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.family-panel__art {
+  display: none;
+}
+
+.family-panel__art img {
+  width: 100%;
+  height: auto;
+  mix-blend-mode: multiply;
+  -webkit-mask-image: radial-gradient(ellipse at 50% 50%, #000 60%, transparent 100%);
+  mask-image: radial-gradient(ellipse at 50% 50%, #000 60%, transparent 100%);
+}
+
+@media (min-width: 360px) {
+  .family-panel__body.has-plate {
+    grid-template-columns: 24% 1fr;
+    align-items: center;
+  }
+  .family-panel__body.has-plate .family-panel__art {
+    display: block;
+  }
+}
+
+.leather-page .family-panel__description {
+  margin: 0 0 var(--space-3);
+  font-style: italic;
+  font-size: 1.02rem;
+  text-align: left;
+}
+
+.leather-page .chapter-cards {
+  gap: var(--space-2);
+}
+
+.leather-page .chapter-card {
+  grid-template-columns: auto 1fr auto;
+  gap: var(--space-2);
+  min-height: 72px;
+  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-2);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(168, 138, 87, 0.85);
+  outline: 1px solid rgba(168, 138, 87, 0.35);
+  outline-offset: -4px;
+  background: rgba(250, 244, 230, 0.55);
+}
+
+.leather-page .chapter-card__glyph {
+  width: 56px;
+  height: 46px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  overflow: hidden;
+}
+
+.leather-page .chapter-card__glyph img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+
+.leather-page .chapter-card__numeral {
+  min-width: 0;
+  font-family: var(--font-serif);
+  font-size: inherit;
+  color: var(--antique-gold);
+}
+
+.leather-page .chapter-card__title {
+  font-size: 1.08rem;
+}
+
+.leather-page .chapter-card__subtitle {
+  font-size: 0.92rem;
+  line-height: 1.25;
+}
+
+.leather-page .chapter-card__cta {
+  display: none;
+}
+
+.leather-page .chapter-card__arrow {
+  color: var(--forest-deep);
+}
+
+.leather-page .paper-card {
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: linear-gradient(180deg, var(--paper-light), var(--parchment));
+  color: var(--ink-brown);
+}
+
+@media (min-width: 768px) {
+  .leather-page {
+    padding: var(--space-6) var(--space-6);
+  }
+}
+
+/* ---------- Navbar con marco dorado (estilo elegido) ---------- */
+.bottom-nav {
+  border-top: 2px solid var(--antique-gold);
+  box-shadow:
+    0 -1px 0 rgba(168, 138, 87, 0.4),
+    0 -8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.bottom-nav__list {
+  padding: 6px 8px;
+  gap: 4px;
+}
+
+.bottom-nav__item {
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  font-family: var(--font-serif);
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.bottom-nav__item.is-active:not(.bottom-nav__item--create) {
+  border-color: rgba(201, 171, 114, 0.85);
+  background: rgba(38, 71, 57, 0.55);
+  box-shadow:
+    inset 0 0 10px rgba(184, 227, 154, 0.18),
+    0 0 8px rgba(201, 171, 114, 0.25);
+}
+
+.bottom-nav__item.is-active .bottom-nav__icon::after {
+  display: none;
+}
+
+.bottom-nav__item--create .bottom-nav__icon {
+  border: 2px solid var(--gold-light);
+  box-shadow:
+    0 0 0 3px rgba(11, 15, 13, 0.95),
+    0 0 0 4.5px rgba(168, 138, 87, 0.8),
+    0 0 14px rgba(201, 171, 114, 0.45);
+}
+
+.leather-page .index-tools {
+  margin: var(--space-3) var(--space-4) var(--space-4);
+}
+
+.leather-page .chapter-card__title {
+  line-height: 1.2;
+}
+
+@media (max-width: 359px) {
+  .leather-page .chapter-card {
+    grid-template-columns: auto 1fr auto;
+  }
+  .leather-page .chapter-card__glyph {
+    display: grid;
+    width: 40px;
+    height: 34px;
+  }
+}
+
+@media (max-width: 359px) {
+  .family-panel__sprig {
+    display: none;
+  }
+}

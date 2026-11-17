@@ -13,6 +13,7 @@ export const FAMILIES: readonly Family[] = [
       'La sabiduría de la tierra: hojas, flores, minerales y los lenguajes simbólicos de sus colores.',
     chapterIds: ['herbolaria', 'gemas', 'colores'],
     illustrationKey: 'naturaleza',
+    sectorKeywords: ['Herbolaria · Gemas', 'Colores'],
     illustrationBrief: 'Lavanda, hojas, cristales y pigmentos.',
   },
   {
@@ -23,6 +24,7 @@ export const FAMILIES: readonly Family[] = [
       'Transforma ingredientes, intenciones y materiales en fórmulas, objetos y memorias de tus prácticas.',
     chapterIds: ['velas', 'preparaciones', 'taller'],
     illustrationKey: 'alquimia',
+    sectorKeywords: ['Velas · Preparaciones', 'Taller'],
     illustrationBrief: 'Botella con elixir, caldero y vela.',
   },
   {
@@ -33,6 +35,7 @@ export const FAMILIES: readonly Family[] = [
       'Consulta ciclos, correspondencias celestes y celebraciones, y enlázalos con tu propio calendario.',
     chapterIds: ['cosmos', 'rueda-ano'],
     illustrationKey: 'cosmos',
+    sectorKeywords: ['Astrología · Lunas', 'Rueda del año'],
     illustrationBrief: 'Astrolabio, planeta y rueda estacional.',
   },
   {
@@ -42,6 +45,7 @@ export const FAMILIES: readonly Family[] = [
     description: 'Un archivo de sistemas simbólicos, tiradas y lecturas que puedes registrar en tu bitácora.',
     chapterIds: ['adivinacion'],
     illustrationKey: 'adivinacion',
+    sectorKeywords: ['Tarot · Péndulo', 'Oráculos'],
     illustrationBrief: 'Tarot, péndulo, espejo.',
   },
   {
@@ -51,6 +55,7 @@ export const FAMILIES: readonly Family[] = [
     description: 'Explora tus prácticas personales, tradiciones, símbolos, relatos y caminos contemplativos.',
     chapterIds: ['hechiceria', 'conciencia', 'mitologia'],
     illustrationKey: 'espiritu',
+    sectorKeywords: ['Rituales · Conciencia', 'Mitología'],
     illustrationBrief: 'Triquetra/geometría, altar, figura mitológica abstracta.',
   },
   {
@@ -60,6 +65,7 @@ export const FAMILIES: readonly Family[] = [
     description: 'Aquí viven los fragmentos de tu historia: lo que soñaste, hiciste, sentiste y aprendiste.',
     chapterIds: ['memorias'],
     illustrationKey: 'memorias',
+    sectorKeywords: ['Sueños · Diario', 'Registros'],
     illustrationBrief: 'Cuaderno manuscrito, pluma, estrellas discretas.',
     secondaryAction: { label: 'Abrir mi bitácora', to: '/bitacora' },
   },

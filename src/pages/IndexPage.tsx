@@ -1,7 +1,7 @@
 import { ChevronDown, List, Search } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Page, PageHeader } from '../components/common/Page';
+import { Filigree, MoonPhases } from '../components/ornaments/Ornaments';
 import { FamilyPanel } from '../components/index/FamilyPanel';
 import { FamilyWheel } from '../components/index/FamilyWheel';
 import { getChaptersByFamily } from '../config/chapters';
@@ -33,7 +33,9 @@ export function IndexPage() {
   };
 
   return (
-    <Page className="page--index">
+    <div className="leather-page">
+      <span className="leather-page__corner leather-page__corner--tl" aria-hidden="true" />
+      <span className="leather-page__corner leather-page__corner--tr" aria-hidden="true" />
       <div className="index-tools">
         <Link to="/buscar" className="search-pill">
           <Search size={18} aria-hidden="true" />
@@ -41,7 +43,12 @@ export function IndexPage() {
         </Link>
       </div>
 
-      <PageHeader title={UI.pages.index.title} subtitle={UI.pages.index.subtitle} />
+      <header className="leather-header">
+        <MoonPhases className="leather-header__moons" />
+        <h1 className="leather-header__title">{UI.pages.index.title}</h1>
+        <p className="leather-header__subtitle">{UI.pages.index.subtitle}</p>
+        <Filigree className="filigree filigree--light" />
+      </header>
 
       <button
         type="button"
@@ -74,14 +81,14 @@ export function IndexPage() {
           )}
         </>
       )}
-    </Page>
+    </div>
   );
 }
 
 /** Alternativa accesible a la rueda: las seis familias y sus 13 capítulos en lista. */
 function IndexList() {
   return (
-    <nav aria-label="Índice en lista" className="index-list">
+    <nav aria-label="Índice en lista" className="index-list paper-card">
       {FAMILIES.map((family) => (
         <section key={family.id} className="index-list__family">
           <h2 className="index-list__family-title">{family.title}</h2>

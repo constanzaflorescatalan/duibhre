@@ -1,13 +1,15 @@
 import { useRef, type KeyboardEvent } from 'react';
 import { FAMILIES } from '../../config/families';
+import { FAMILY_ART } from '../../config/illustrations';
 import type { FamilyId } from '../../types/domain';
-import { FamilyGlyph } from '../ornaments/FamilyGlyph';
 import { Triquetra } from '../ornaments/Ornaments';
 
 /**
- * Rueda ilustrada de seis sectores sobre pergamino (sección 3.1).
- * Cada sector es un botón accesible con `aria-pressed`; flechas izquierda/derecha
- * recorren la rueda. Tocar un sector solo selecciona: no navega.
+ * Rueda ilustrada de seis sectores (sección 3.1), con el estilo de la imagen
+ * elegida: pergamino pintado, separadores y aro de oro antiguo, sector activo
+ * con luz verde suave y medallón central con triquetra.
+ * Cada sector es un botón accesible con `aria-pressed`; las flechas recorren
+ * la rueda. Tocar un sector solo selecciona: no navega.
  */
 interface Props {
   selected: FamilyId;
@@ -16,10 +18,12 @@ interface Props {
 
 const SIZE = 400;
 const C = SIZE / 2;
-const R_OUTER = 192;
-const R_INNER = 50;
-const R_GLYPH = 98;
-const R_LABEL = 150;
+const R_OUTER = 190;
+const R_INNER = 48;
+/** Distancia del centro del bloque ilustración+nombre por sector (arriba hay más espacio). */
+const R_CENTROID = [130, 118, 118, 122, 118, 118];
+const IMG_W = 88;
+const IMG_H = 60;
 const SWEEP = 360 / FAMILIES.length;
 
 function polar(r: number, deg: number) {
@@ -39,6 +43,12 @@ function sectorPath(start: number, end: number) {
     `A${R_INNER} ${R_INNER} 0 0 0 ${i2.x} ${i2.y}`,
     'Z',
   ].join(' ');
+}
+
+/** Estrella de cuatro puntas centrada en (x, y). */
+function star(x: number, y: number, r: number) {
+  const k = r * 0.28;
+  return `M${x} ${y - r}L${x + k} ${y - k}L${x + r} ${y}L${x + k} ${y + k}L${x} ${y + r}L${x - k} ${y + k}L${x - r} ${y}L${x - k} ${y - k}Z`;
 }
 
 export function FamilyWheel({ selected, onSelect }: Props) {
@@ -67,22 +77,30 @@ export function FamilyWheel({ selected, onSelect }: Props) {
     <div className="wheel">
       <svg
         className="wheel__svg"
-        viewBox={`0 0 ${SIZE} ${SIZE}`}
+        viewBox={`-6 -6 ${SIZE + 12} ${SIZE + 12}`}
         role="group"
         aria-label="Rueda de las seis familias del grimorio"
       >
         <defs>
-          <radialGradient id="wheelPaper" cx="50%" cy="45%" r="60%">
-            <stop offset="0%" stopColor="#f7f2e6" />
-            <stop offset="75%" stopColor="#ebe2cf" />
-            <stop offset="100%" stopColor="#d9cdb4" />
+          <radialGradient id="wheelPaper" cx="50%" cy="50%" r="55%">
+            <stop offset="0%" stopColor="#efe5cf" />
+            <stop offset="70%" stopColor="#e6d9bb" />
+            <stop offset="100%" stopColor="#cdb98f" />
           </radialGradient>
           <radialGradient id="wheelSelected" cx="50%" cy="50%" r="60%">
-            <stop offset="0%" stopColor="#f3f5e8" />
-            <stop offset="100%" stopColor="#dfe6d2" />
+            <stop offset="0%" stopColor="#2f5a2a" stopOpacity="0.15" />
+            <stop offset="45%" stopColor="#c9df9e" />
+            <stop offset="100%" stopColor="#7fae58" />
           </radialGradient>
+          <radialGradient id="artFade" cx="50%" cy="50%" r="50%">
+            <stop offset="62%" stopColor="#fff" />
+            <stop offset="100%" stopColor="#000" />
+          </radialGradient>
+          <mask id="artMask" maskContentUnits="objectBoundingBox">
+            <rect width="1" height="1" fill="url(#artFade)" />
+          </mask>
           <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="3" result="b" />
+            <feGaussianBlur stdDeviation="3.5" result="b" />
             <feMerge>
               <feMergeNode in="b" />
               <feMergeNode in="SourceGraphic" />
@@ -91,16 +109,15 @@ export function FamilyWheel({ selected, onSelect }: Props) {
         </defs>
 
         {/* Aro exterior de oro antiguo */}
-        <circle cx={C} cy={C} r={R_OUTER + 5} fill="none" stroke="#a88a57" strokeWidth="1.5" />
-        <circle cx={C} cy={C} r={R_OUTER + 2} fill="#12261d" />
+        <circle cx={C} cy={C} r={R_OUTER + 5} fill="#12261d" stroke="#c9ab72" strokeWidth="2.2" />
+        <circle cx={C} cy={C} r={R_OUTER + 1.5} fill="none" stroke="#7d6538" strokeWidth="1" />
 
         {FAMILIES.map((family, i) => {
           const start = i * SWEEP - SWEEP / 2;
           const end = start + SWEEP;
-          const mid = start + SWEEP / 2;
-          const glyph = polar(R_GLYPH, mid);
-          const label = polar(R_LABEL, mid);
+          const c = polar(R_CENTROID[i] ?? 118, start + SWEEP / 2);
           const isSelected = family.id === selected;
+          const art = FAMILY_ART[family.id];
           return (
             <g
               key={family.id}
@@ -115,47 +132,55 @@ export function FamilyWheel({ selected, onSelect }: Props) {
               onClick={() => onSelect(family.id)}
               onKeyDown={(e) => handleKey(e, i)}
             >
-              <path
-                className="wheel__shape"
-                d={sectorPath(start, end)}
-                fill={isSelected ? 'url(#wheelSelected)' : 'url(#wheelPaper)'}
+              <path className="wheel__shape" d={sectorPath(start, end)} fill="url(#wheelPaper)" />
+              {isSelected && (
+                <path
+                  d={sectorPath(start, end)}
+                  fill="url(#wheelSelected)"
+                  opacity="0.85"
+                  pointerEvents="none"
+                />
+              )}
+              <image
+                className="wheel__art"
+                href={art.src}
+                x={c.x - IMG_W / 2}
+                y={c.y - 52}
+                width={IMG_W}
+                height={IMG_H}
+                preserveAspectRatio="xMidYMid slice"
+                mask="url(#artMask)"
+                aria-hidden="true"
               />
-              <g transform={`translate(${glyph.x - 29} ${glyph.y - 29})`}>
-                <FamilyGlyph familyId={family.id} size={58} />
-              </g>
-              <text
-                className="wheel__label"
-                x={label.x}
-                y={label.y}
-                textAnchor="middle"
-                dominantBaseline="middle"
-              >
+              <text className="wheel__label" x={c.x} y={c.y + 25} textAnchor="middle">
                 {family.title}
+              </text>
+              <text className="wheel__keywords" x={c.x} y={c.y + 42} textAnchor="middle">
+                {family.sectorKeywords.map((line, n) => (
+                  <tspan key={n} x={c.x} dy={n === 0 ? 0 : 12}>
+                    {line}
+                  </tspan>
+                ))}
               </text>
             </g>
           );
         })}
 
-        {/* Líneas separadoras de oro antiguo */}
+        {/* Separadores dorados y estrellas en el aro */}
         {FAMILIES.map((family, i) => {
           const angle = i * SWEEP - SWEEP / 2;
           const a = polar(R_INNER, angle);
           const b = polar(R_OUTER, angle);
+          const s = polar(R_OUTER + 3, angle);
           return (
-            <line
-              key={`sep-${family.id}`}
-              x1={a.x}
-              y1={a.y}
-              x2={b.x}
-              y2={b.y}
-              stroke="#a88a57"
-              strokeWidth="1.6"
-              pointerEvents="none"
-            />
+            <g key={`sep-${family.id}`} pointerEvents="none">
+              <line x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke="#b8975c" strokeWidth="2" />
+              <path d={star(s.x, s.y, 9)} fill="#d8bd84" stroke="#7d6538" strokeWidth="0.6" />
+            </g>
           );
         })}
 
-        {/* Contorno luminoso del sector seleccionado (verde suave + reflejo dorado) */}
+        {/* Contorno luminoso del sector seleccionado */}
         {FAMILIES.map((family, i) =>
           family.id === selected ? (
             <path
@@ -169,17 +194,20 @@ export function FamilyWheel({ selected, onSelect }: Props) {
         )}
 
         {/* Medallón central con triquetra */}
-        <circle
-          cx={C}
-          cy={C}
-          r={R_INNER}
-          fill="#12261d"
-          stroke="#a88a57"
-          strokeWidth="2"
-          pointerEvents="none"
-        />
-        <g transform={`translate(${C - 36} ${C - 38})`} color="#c9ab72" pointerEvents="none">
-          <Triquetra size={72} />
+        <g pointerEvents="none">
+          <circle cx={C} cy={C} r={R_INNER} fill="#12261d" stroke="#c9ab72" strokeWidth="2.4" />
+          <circle
+            cx={C}
+            cy={C}
+            r={R_INNER - 7}
+            fill="none"
+            stroke="#a88a57"
+            strokeWidth="1"
+            strokeDasharray="1 3.2"
+          />
+          <g transform={`translate(${C - 33} ${C - 35})`} color="#d4b77c">
+            <Triquetra size={66} withCircle={false} />
+          </g>
         </g>
       </svg>
     </div>

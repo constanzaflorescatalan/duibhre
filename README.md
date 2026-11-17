@@ -108,8 +108,11 @@ docs/             Especificación maestra y flujo de CI pendiente de activar
 - **date-fns** con la zona horaria explícita `America/Santiago` (hemisferio sur por defecto).
 - **Tipografías** (licencia SIL OFL, empaquetadas con `@fontsource`): Cinzel Decorative (títulos),
   Cormorant Garamond (lectura), Crimson Text itálica (bajadas) y DM Sans (formularios).
-- **Íconos** Lucide (licencia ISC) como provisionales; las ilustraciones de la rueda son SVG
-  provisionales de tinta y acuarela, reemplazables por las láminas pintadas definitivas.
+- **Íconos** Lucide (licencia ISC) como provisionales.
+- **Índice con el estilo de la imagen elegida** (`03_Indice_Movil_Rueda_6_Familias_ELEGIDA.png`): cuero
+  verde con marco dorado, rueda pintada y panel de pergamino con lámina botánica. Las ilustraciones
+  pintadas están recortadas de esa imagen y son provisionales; la lista de láminas definitivas que faltan
+  está en [`docs/ilustraciones-pendientes.md`](docs/ilustraciones-pendientes.md).
 - La portada usa la **imagen aprobada** optimizada (`src/assets/cover/portada-duibhre.jpg`); vectorizar el
   lettering queda como tarea posterior.
 - Volver usa el historial real y, sin historial (enlace directo), el padre lógico de la ruta.
