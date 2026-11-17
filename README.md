@@ -11,7 +11,9 @@ Proyecto de diseño UX/UI + front-end (portafolio) y grimorio de uso personal.
 
 Ya funciona: crear, editar, guardar como borrador, marcar favoritas, archivar y eliminar fichas propias; copiar fichas de ejemplo a «Mis fichas»; tomar o subir fotos con texto alternativo editable. Todo se guarda en IndexedDB y persiste al recargar.
 
-Pendiente de la Etapa 2: notas vinculadas a fichas que aparecen en la Bitácora, y exportar/importar respaldo JSON.
+Bitácora: memorias (sueños, rituales, tiradas, meditaciones, recuerdos…) que se guardan una sola vez y aparecen en la Bitácora, en cada ficha vinculada y en «Mis notas» del capítulo. Borrar una ficha conserva sus memorias (solo las desvincula). Rutas nuevas: `/bitacora/:recordId` y `/bitacora/:recordId/editar`.
+
+Pendiente de la Etapa 2: exportar/importar respaldo JSON y fotos en las memorias.
 
 ### Etapa 1 — base navegable
 
