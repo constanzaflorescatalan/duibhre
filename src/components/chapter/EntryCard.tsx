@@ -21,6 +21,8 @@ export function EntryCard({ entry, showChapter = false }: { entry: GrimorioEntry
         {entry.description && <span className="entry-card__desc">{entry.description}</span>}
         <span className="entry-card__meta">
           {entry.origin === 'seed' && <span className="tag tag--example">{UI.exampleBadge}</span>}
+          {entry.status === 'draft' && <span className="tag tag--draft">Borrador</span>}
+          {entry.isFavorite && <span className="tag tag--example">Favorito</span>}
           {showChapter && chapter && (
             <span className="tag">
               {chapter.romanNumeral} · {chapter.title}

@@ -1,17 +1,33 @@
-import { AlertTriangle, CalendarPlus, Copy, Heart, NotebookPen, Pencil } from 'lucide-react';
+import {
+  AlertTriangle,
+  Archive,
+  ArchiveRestore,
+  CalendarPlus,
+  Copy,
+  Heart,
+  NotebookPen,
+  Pencil,
+  Trash2,
+} from 'lucide-react';
 import { useId, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { ConfirmDialog } from '../components/common/ConfirmDialog';
 import { EntryCard } from '../components/chapter/EntryCard';
 import { EmptyState } from '../components/common/EmptyState';
 import { Page } from '../components/common/Page';
-import { StageNotice } from '../components/common/StageNotice';
 import { IllustrationPreview } from '../components/media/IllustrationPreview';
 import { ChapterGlyph } from '../components/ornaments/ChapterGlyph';
 import { Filigree } from '../components/ornaments/Ornaments';
 import { getChapter, getSubtopic } from '../config/chapters';
 import { ENTRY_TEMPLATES } from '../config/entryTemplates';
 import { UI } from '../config/uiCopy';
-import { getEntry } from '../data/repositories/entries';
+import {
+  copySeedToPersonal,
+  deleteEntry,
+  getEntry,
+  setArchived,
+  toggleFavorite,
+} from '../data/repositories/entries';
 import { useAsync } from '../hooks/useAsync';
 import { formatDate } from '../utils/dates';
 import { NotFoundPage } from './NotFoundPage';
@@ -21,12 +37,18 @@ type Section = 'conocimiento' | 'anotaciones' | 'relaciones';
 /** Detalle de ficha `/fichas/:entryId` (sección 7.6). */
 export function EntryPage() {
   const { entryId = '' } = useParams();
-  const result = useAsync(() => getEntry(entryId), [entryId]);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const savedStatus = (location.state as { saved?: 'draft' | 'saved' } | null)?.saved;
+  const [version, setVersion] = useState(0);
+  const [actionError, setActionError] = useState<string | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const result = useAsync(() => getEntry(entryId), [entryId, version]);
   const related = useAsync(async () => {
     const entry = await getEntry(entryId);
     const list = await Promise.all((entry?.relatedEntryIds ?? []).map((id) => getEntry(id)));
     return list.filter((e) => e !== undefined);
-  }, [entryId]);
+  }, [entryId, version]);
   const [section, setSection] = useState<Section>('conocimiento');
   const baseId = useId();
 
@@ -46,6 +68,20 @@ export function EntryPage() {
   const subtopic = getSubtopic(entry.chapterId, entry.subtopicId);
   const template = ENTRY_TEMPLATES[chapter.templateId];
   const isSeed = entry.origin === 'seed';
+
+  const run = async (action: () => Promise<unknown>) => {
+    setActionError(null);
+    try {
+      await action();
+      setVersion((v) => v + 1);
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : 'No se pudo completar la acción.');
+    }
+  };
+  const copy = async () => {
+    const created = await copySeedToPersonal(entry.id);
+    navigate(`/fichas/${created.id}/editar`);
+  };
 
   const fields = template.fields
     .map((f) => ({ field: f, value: entry.extraFields[f.key] }))
@@ -80,29 +116,56 @@ export function EntryPage() {
         )}
         <p className="entry-header__meta">
           {isSeed && <span className="tag tag--example">{UI.exampleBadge}</span>}
+          {entry.status === 'draft' && <span className="tag tag--draft">Borrador</span>}
+          {entry.status === 'archived' && <span className="tag">Archivada</span>}
           <span className="tag">Plantilla: {template.name}</span>
           <span>Actualizada el {formatDate(entry.updatedAt)}</span>
         </p>
         <Filigree className="filigree" />
       </header>
 
+      {savedStatus && (
+        <p className="success-text" role="status">
+          {savedStatus === 'draft'
+            ? 'Borrador guardado en este dispositivo.'
+            : 'Página guardada en este dispositivo.'}
+        </p>
+      )}
+      {actionError && (
+        <p className="error-text" role="alert">
+          {actionError}
+        </p>
+      )}
+
       <div className="button-row button-row--wrap">
         {isSeed ? (
-          <button type="button" className="btn btn--secondary btn--small" disabled title={UI.stage2}>
+          <button type="button" className="btn btn--primary btn--small" onClick={() => run(copy)}>
             <Copy size={18} aria-hidden="true" />
             Copiar a mis fichas
           </button>
         ) : (
-          <Link to={`/fichas/${entry.id}/editar`} className="btn btn--secondary">
-            <Pencil size={18} aria-hidden="true" />
-            Editar
-          </Link>
+          <>
+            <Link to={`/fichas/${entry.id}/editar`} className="btn btn--primary btn--small">
+              <Pencil size={18} aria-hidden="true" />
+              Editar
+            </Link>
+            <button
+              type="button"
+              className={`btn btn--secondary btn--small${entry.isFavorite ? ' is-favorite' : ''}`}
+              aria-pressed={entry.isFavorite}
+              onClick={() => run(() => toggleFavorite(entry.id))}
+            >
+              <Heart size={18} aria-hidden="true" fill={entry.isFavorite ? 'currentColor' : 'none'} />
+              {entry.isFavorite ? 'En favoritos' : 'Guardar en favoritos'}
+            </button>
+          </>
         )}
-        <button type="button" className="btn btn--secondary btn--small" disabled title={UI.stage2}>
-          <Heart size={18} aria-hidden="true" />
-          Favorito
-        </button>
-        <button type="button" className="btn btn--secondary btn--small" disabled title={UI.stage2}>
+        <button
+          type="button"
+          className="btn btn--secondary btn--small"
+          disabled
+          title="Disponible próximamente"
+        >
           <NotebookPen size={18} aria-hidden="true" />
           Añadir nota
         </button>
@@ -116,9 +179,12 @@ export function EntryPage() {
           Vincular al calendario
         </button>
       </div>
-      <p className="muted small">
-        Copiar, favoritos y notas llegan en la Etapa 2; los vínculos con la agenda, en la Etapa 3.
-      </p>
+      {isSeed && (
+        <p className="muted small">
+          Las fichas de ejemplo no se editan en origen: cópiala a «Mis fichas» para completarla con tus
+          fuentes.
+        </p>
+      )}
 
       <div className="tabs" role="tablist" aria-label="Secciones de la ficha">
         {sections.map((s) => (
@@ -184,6 +250,12 @@ export function EntryPage() {
           </>
         )}
 
+        {section === 'anotaciones' && typeof entry.extraFields.personalNotes === 'string' && (
+          <div className="personal-notes">
+            <h2 className="section-title">Notas personales</h2>
+            <p className="personal-notes__text">{entry.extraFields.personalNotes}</p>
+          </div>
+        )}
         {section === 'anotaciones' && (
           <EmptyState
             title={UI.empty.notes.title}
@@ -205,12 +277,44 @@ export function EntryPage() {
           ))}
       </div>
 
-      {isSeed && (
-        <StageNotice stage={2}>
-          Las fichas de ejemplo no se editan en origen: en la Etapa 2 podrás copiarlas a «Mis fichas» y
-          completarlas con tus fuentes.
-        </StageNotice>
+      {!isSeed && (
+        <div className="danger-zone">
+          <button
+            type="button"
+            className="btn btn--ghost btn--small"
+            onClick={() => run(() => setArchived(entry.id, entry.status !== 'archived'))}
+          >
+            {entry.status === 'archived' ? (
+              <ArchiveRestore size={18} aria-hidden="true" />
+            ) : (
+              <Archive size={18} aria-hidden="true" />
+            )}
+            {entry.status === 'archived' ? 'Sacar del archivo' : 'Archivar'}
+          </button>
+          <button type="button" className="btn btn--danger btn--small" onClick={() => setConfirmDelete(true)}>
+            <Trash2 size={18} aria-hidden="true" />
+            Eliminar
+          </button>
+        </div>
       )}
+
+      <ConfirmDialog
+        open={confirmDelete}
+        title={`¿Eliminar «${entry.title}»?`}
+        message="Se borrarán esta ficha y sus fotos de este dispositivo. No se puede deshacer."
+        confirmLabel="Eliminar definitivamente"
+        danger
+        onCancel={() => setConfirmDelete(false)}
+        onConfirm={async () => {
+          setConfirmDelete(false);
+          try {
+            await deleteEntry(entry.id);
+            navigate(`/capitulos/${chapter.id}`, { replace: true });
+          } catch (err) {
+            setActionError(err instanceof Error ? err.message : 'No se pudo eliminar.');
+          }
+        }}
+      />
     </Page>
   );
 }

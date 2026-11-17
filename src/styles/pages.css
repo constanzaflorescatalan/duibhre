@@ -806,3 +806,30 @@
   font-weight: 600;
   text-align: right;
 }
+
+/* ---------- Formulario de ficha y acciones de ficha ---------- */
+.entry-form .form-field {
+  margin-top: var(--space-3);
+}
+
+.form-section--actions {
+  background: rgba(38, 71, 57, 0.06);
+}
+
+.form-section--actions .button-row {
+  margin: var(--space-2) 0 0;
+}
+
+.danger-zone {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+  margin-top: var(--space-6);
+  padding-top: var(--space-4);
+  border-top: 1px solid rgba(168, 138, 87, 0.4);
+}
+
+.personal-notes__text {
+  white-space: pre-wrap;
+}
