@@ -7,7 +7,13 @@ Proyecto de diseño UX/UI + front-end (portafolio) y grimorio de uso personal.
 - Interfaz en español de Chile (`es-CL`), **mobile-first**, preparada para evolucionar a PWA.
 - Especificación completa: [`docs/especificacion-maestra.md`](docs/especificacion-maestra.md).
 
-## Estado: Etapa 1 — base navegable
+## Estado: Etapa 2 en curso — guardado local
+
+Ya funciona: crear, editar, guardar como borrador, marcar favoritas, archivar y eliminar fichas propias; copiar fichas de ejemplo a «Mis fichas»; tomar o subir fotos con texto alternativo editable. Todo se guarda en IndexedDB y persiste al recargar.
+
+Pendiente de la Etapa 2: notas vinculadas a fichas que aparecen en la Bitácora, y exportar/importar respaldo JSON.
+
+### Etapa 1 — base navegable
 
 | Funciona hoy                                                                       | Llega después                                                                                                   |
 | ---------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
