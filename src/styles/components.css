@@ -818,3 +818,34 @@ details.form-section[open] > summary::before {
     animation: none;
   }
 }
+
+/* ---------- Íconos de información desplegable (Perfil) ---------- */
+.info-icons {
+  display: flex;
+  gap: var(--space-2);
+  margin: var(--space-2) 0 var(--space-3);
+}
+
+.info-icons__btn {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(168, 138, 87, 0.75);
+  border-radius: 50%;
+  background: rgba(250, 244, 230, 0.55);
+  color: var(--forest-middle);
+}
+
+.info-icons__btn.is-open {
+  background: var(--forest-middle);
+  border-color: var(--forest-middle);
+  color: var(--paper-light);
+}
+
+.info-icons__text {
+  margin: 0 0 var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-left: 3px solid var(--antique-gold);
+  font-size: 0.98rem;
+}

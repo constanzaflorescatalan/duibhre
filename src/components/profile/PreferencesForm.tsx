@@ -1,11 +1,9 @@
 import { Save } from 'lucide-react';
 import { useMemo, useState, type FormEvent } from 'react';
 import { savePreferences } from '../../data/repositories/preferences';
-import type { IllustrationStyle, Preferences } from '../../types/domain';
+import type { Preferences } from '../../types/domain';
 import { availableTimeZones } from '../../utils/timezone';
-import { ILLUSTRATION_STYLES } from '../../config/illustrationStyles';
 import { Link } from 'react-router-dom';
-import { appendDictation } from '../../utils/dictation';
 import { DictationButton } from '../common/DictationButton';
 
 /** Identidad (alias y dedicatoria) y preferencias de agenda (secciones 7.11 y 11). */
@@ -13,7 +11,6 @@ export function PreferencesForm({ prefs, onSaved }: { prefs: Preferences; onSave
   const [displayName, setDisplayName] = useState(prefs.displayName ?? '');
   const [dedication, setDedication] = useState(prefs.dedication ?? '');
   const [timeZone, setTimeZone] = useState(prefs.timeZone);
-  const [style, setStyle] = useState<IllustrationStyle>(prefs.preferredIllustrationStyle);
   const [status, setStatus] = useState<{ ok: boolean; text: string } | null>(null);
   const [saving, setSaving] = useState(false);
   const zones = useMemo(() => availableTimeZones(), []);
@@ -29,7 +26,8 @@ export function PreferencesForm({ prefs, onSaved }: { prefs: Preferences; onSave
         // Este grimorio se usa solo en el hemisferio sur.
         hemisphere: 'south',
         timeZone,
-        preferredIllustrationStyle: style,
+        // El estilo de ilustración ya está definido (tinta y acuarela del grimorio); se conserva el guardado.
+        preferredIllustrationStyle: prefs.preferredIllustrationStyle,
       });
       setStatus({ ok: true, text: 'Preferencias guardadas.' });
       onSaved();
@@ -68,7 +66,9 @@ export function PreferencesForm({ prefs, onSaved }: { prefs: Preferences; onSave
         <div className="field-actions">
           <DictationButton
             label="Dictar dedicatoria"
-            onText={(piece) => setDedication((prev) => appendDictation(prev, piece, 500))}
+            value={dedication}
+            onChange={setDedication}
+            maxLength={500}
           />
           <Link to="/dedicatoria" className="btn btn--ghost btn--small">
             Ver la página de dedicatoria
@@ -88,20 +88,6 @@ export function PreferencesForm({ prefs, onSaved }: { prefs: Preferences; onSave
             ))}
           </select>
         </label>
-        <label className="form-field">
-          <span className="form-field__label">Estilo de ilustración preferido</span>
-          <select
-            className="input"
-            value={style}
-            onChange={(e) => setStyle(e.target.value as IllustrationStyle)}
-          >
-            {ILLUSTRATION_STYLES.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.label}
-              </option>
-            ))}
-          </select>
-        </label>
         <dl className="pref-list">
           <div>
             <dt>Hemisferio</dt>
@@ -110,10 +96,6 @@ export function PreferencesForm({ prefs, onSaved }: { prefs: Preferences; onSave
           <div>
             <dt>Idioma</dt>
             <dd>Español de Chile</dd>
-          </div>
-          <div>
-            <dt>Tema</dt>
-            <dd>Cuero oscuro</dd>
           </div>
         </dl>
         {status && (

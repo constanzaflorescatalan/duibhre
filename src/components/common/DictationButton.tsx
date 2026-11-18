@@ -1,5 +1,6 @@
 import { Mic, MicOff } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import { appendDictation } from '../../utils/dictation';
 
 /** Lo mínimo de la Web Speech API que se usa (no está en todos los navegadores). */
 interface RecognitionResult {
@@ -39,26 +40,30 @@ const ERRORS: Record<string, string> = {
 };
 
 interface Props {
-  /** Recibe cada frase reconocida, tal como se dijo. */
-  onText: (text: string) => void;
+  /** Texto actual del campo. */
+  value: string;
+  /** Recibe el texto completo del campo con lo dictado, en vivo mientras se habla. */
+  onChange: (next: string) => void;
+  maxLength?: number;
   label?: string;
 }
 
 /**
- * Dictado por voz (es-CL) con el reconocimiento del propio navegador: solo
- * escribe las palabras que se dicen, sin reescribirlas. Si el navegador no lo
- * permite, lo dice en vez de fingir.
+ * Dictado por voz (es-CL) con el reconocimiento del propio navegador: escribe
+ * en vivo dentro del campo solo las palabras que se dicen, sin reescribirlas.
+ * Si el navegador no lo permite, lo dice en vez de fingir.
  */
-export function DictationButton({ onText, label = 'Dictar' }: Props) {
+export function DictationButton({ value, onChange, maxLength, label = 'Dictar' }: Props) {
   const [listening, setListening] = useState(false);
-  const [interim, setInterim] = useState('');
   const [message, setMessage] = useState<string | null>(null);
   const recRef = useRef<Recognition | null>(null);
-  const onTextRef = useRef(onText);
+  const onChangeRef = useRef(onChange);
+  const valueRef = useRef(value);
 
   useEffect(() => {
-    onTextRef.current = onText;
-  }, [onText]);
+    onChangeRef.current = onChange;
+    valueRef.current = value;
+  }, [onChange, value]);
 
   useEffect(() => () => recRef.current?.stop(), []);
 
@@ -78,27 +83,23 @@ export function DictationButton({ onText, label = 'Dictar' }: Props) {
 
   const start = () => {
     setMessage(null);
+    // Lo dictado en esta sesión se escribe a continuación del texto que había al empezar.
+    const base = valueRef.current;
     const rec = new Ctor();
     rec.lang = 'es-CL';
     rec.continuous = true;
     rec.interimResults = true;
     rec.onresult = (e) => {
-      let partial = '';
-      for (let i = e.resultIndex; i < e.results.length; i++) {
-        const r = e.results[i];
-        const text = r[0].transcript.trim();
-        if (!text) continue;
-        if (r.isFinal) onTextRef.current(text);
-        else partial += `${text} `;
-      }
-      setInterim(partial.trim());
+      const spoken = Array.from({ length: e.results.length }, (_, i) => e.results[i][0].transcript.trim())
+        .filter(Boolean)
+        .join(' ');
+      onChangeRef.current(spoken ? appendDictation(base, spoken, maxLength) : base);
     };
     rec.onerror = (e) => {
       if (e.error !== 'aborted') setMessage(ERRORS[e.error] ?? 'No se pudo usar el dictado.');
     };
     rec.onend = () => {
       setListening(false);
-      setInterim('');
       recRef.current = null;
     };
     recRef.current = rec;
@@ -122,7 +123,7 @@ export function DictationButton({ onText, label = 'Dictar' }: Props) {
         {listening ? 'Detener' : label}
       </button>
       <span className="dictation__status" aria-live="polite">
-        {listening ? interim || 'Escuchando…' : message}
+        {listening ? 'Escuchando…' : message}
       </span>
     </div>
   );

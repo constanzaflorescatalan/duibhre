@@ -1,4 +1,4 @@
-import { Download, HardDrive, ShieldCheck, Trash2, Upload } from 'lucide-react';
+import { Download, HardDrive, ImageIcon, ShieldCheck, Trash2, Upload, type LucideIcon } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { UI } from '../../config/uiCopy';
 import {
@@ -16,6 +16,28 @@ import { ConfirmDialog } from '../common/ConfirmDialog';
 
 type Status = { kind: 'ok' | 'error'; text: string } | null;
 
+/** Explicaciones que solo aparecen al tocar su ícono. */
+const INFO: { id: string; label: string; Icon: LucideIcon; text: string }[] = [
+  {
+    id: 'datos',
+    label: 'Dónde se guardan tus datos',
+    Icon: HardDrive,
+    text: `${UI.localDataNotice}. Limpiar el navegador o cambiar de dispositivo puede borrar tus páginas: descarga un respaldo de vez en cuando.`,
+  },
+  {
+    id: 'respaldo',
+    label: 'Sobre el respaldo',
+    Icon: ShieldCheck,
+    text: 'El respaldo es un archivo JSON que queda solo en tu dispositivo; nada se envía a ningún servidor. Guárdalo en un lugar seguro: contiene tus notas y fotos.',
+  },
+  {
+    id: 'ilustraciones',
+    label: 'Sobre las ilustraciones',
+    Icon: ImageIcon,
+    text: 'Ninguna foto se sube a servicios externos. Cuando exista la transformación ilustrada, se pedirá tu consentimiento antes de enviar cualquier imagen.',
+  },
+];
+
 const describe = (s: Omit<BackupSummary, 'exportedAt'>) =>
   `${s.entries} fichas, ${s.journal} memorias, ${s.events} eventos y ${s.images} imágenes`;
 
@@ -26,6 +48,8 @@ export function DataSection({ onChanged }: { onChanged: () => void }) {
   const [busy, setBusy] = useState(false);
   const [pending, setPending] = useState<BackupFile | null>(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [openInfo, setOpenInfo] = useState<string | null>(null);
+  const info = INFO.find((i) => i.id === openInfo);
 
   const run = async (task: () => Promise<void>) => {
     setBusy(true);
@@ -62,11 +86,27 @@ export function DataSection({ onChanged }: { onChanged: () => void }) {
   return (
     <section className="profile-section">
       <h2 className="section-title">Privacidad y datos</h2>
-      <p className="notice-line">
-        <HardDrive size={18} aria-hidden="true" />
-        {UI.localDataNotice}. Limpiar el navegador o cambiar de dispositivo puede borrar tus páginas: descarga
-        un respaldo de vez en cuando.
-      </p>
+      <div className="info-icons" role="group" aria-label="Información de privacidad">
+        {INFO.map(({ id, label, Icon }) => (
+          <button
+            key={id}
+            type="button"
+            className={`info-icons__btn${openInfo === id ? ' is-open' : ''}`}
+            aria-label={label}
+            title={label}
+            aria-expanded={openInfo === id}
+            aria-controls="info-privacidad"
+            onClick={() => setOpenInfo((cur) => (cur === id ? null : id))}
+          >
+            <Icon size={20} aria-hidden="true" />
+          </button>
+        ))}
+      </div>
+      {info && (
+        <p id="info-privacidad" className="info-icons__text" role="note">
+          <strong>{info.label}.</strong> {info.text}
+        </p>
+      )}
 
       <div className="button-row button-row--wrap">
         <button type="button" className="btn btn--primary" onClick={onExport} disabled={busy}>
@@ -118,12 +158,6 @@ export function DataSection({ onChanged }: { onChanged: () => void }) {
           {status.text}
         </p>
       )}
-
-      <p className="notice-line">
-        <ShieldCheck size={18} aria-hidden="true" />
-        El respaldo es un archivo JSON que queda solo en tu dispositivo; nada se envía a ningún servidor.
-        Guárdalo en un lugar seguro: contiene tus notas y fotos.
-      </p>
 
       <ConfirmDialog
         open={pending !== null}

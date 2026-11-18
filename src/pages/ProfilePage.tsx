@@ -4,7 +4,6 @@ import { Page, PageHeader } from '../components/common/Page';
 import { DataSection } from '../components/profile/DataSection';
 import { PreferencesForm } from '../components/profile/PreferencesForm';
 import { getPreferences } from '../data/repositories/preferences';
-import { StageNotice } from '../components/common/StageNotice';
 import { UI } from '../config/uiCopy';
 import { countFavorites, countPersonalEntries } from '../data/repositories/entries';
 import { countEvents } from '../data/repositories/events';
@@ -90,19 +89,6 @@ export function ProfilePage() {
       </section>
 
       <DataSection onChanged={() => setVersion((v) => v + 1)} />
-
-      <section className="profile-section">
-        <h2 className="section-title">Ilustraciones</h2>
-        <p className="muted">
-          Ninguna foto se sube a servicios externos. Cuando exista la transformación ilustrada, se pedirá tu
-          consentimiento antes de enviar cualquier imagen.
-        </p>
-      </section>
-
-      <StageNotice stage={4}>
-        Cuentas, inicio de sesión y sincronización entre dispositivos llegarán más adelante. Hoy no existe
-        ninguna cuenta.
-      </StageNotice>
     </Page>
   );
 }
