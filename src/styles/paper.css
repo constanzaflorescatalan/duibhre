@@ -20,26 +20,39 @@
   position: fixed;
   inset: 0;
   z-index: -1;
-  /*
-   * Dibujos a pluma hechos a mano (generados en ChatGPT y convertidos a tinta
-   * transparente), repartidos en cuatro tiras para que no se corten ni se
-   * deformen en ninguna pantalla: arriba bajo la cabecera, abajo sobre la
-   * navbar y columnas a izquierda y derecha.
-   */
-  --doodle-top: calc(80px + env(safe-area-inset-top));
-  --doodle-bottom: calc(88px + env(safe-area-inset-bottom));
-  --doodle-band: min(100%, 560px);
   background:
-    url('/textures/garabatos-arriba.png') left top var(--doodle-top) / min(80%, 448px) auto no-repeat,
-    url('/textures/garabatos-abajo.png') center bottom var(--doodle-bottom) / var(--doodle-band) auto
-      no-repeat,
-    url('/textures/garabatos-izquierda.png') left top calc(var(--doodle-top) + min(21vw, 116px)) / auto
-      calc(100% - var(--doodle-top) - var(--doodle-bottom) - min(43vw, 236px)) no-repeat,
-    url('/textures/garabatos-derecha.png') right top var(--doodle-top) / auto
-      calc(100% - var(--doodle-top) - var(--doodle-bottom) - min(21vw, 118px)) no-repeat,
     var(--paper-texture) center / 100% 100% no-repeat,
     #eddcb8;
   pointer-events: none;
+}
+
+/*
+ * Viñetas a pluma hechas a mano (generadas en ChatGPT y convertidas a tinta
+ * transparente) que se asoman desde los bordes: pentagrama y setas arriba,
+ * athame al costado y un caldero grande abajo, cada una con notas manuscritas
+ * alrededor. Difuminadas y muy tenues para no competir con el texto.
+ */
+.paper-sheet::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  --vh-top: calc(76px + env(safe-area-inset-top));
+  --v-penta: min(64vw, 360px);
+  --v-setas: min(60vw, 340px);
+  --v-athame: min(58vw, 330px);
+  --v-caldero: min(108vw, 600px);
+  /* Los desplazamientos negativos son proporcionales al tamaño: siempre se asoma la misma parte. */
+  background:
+    url('/textures/vineta-pentagrama.png') left calc(var(--v-penta) * -0.32) top
+      calc(var(--vh-top) - var(--v-penta) * 0.06) / var(--v-penta) auto no-repeat,
+    url('/textures/vineta-setas.png') right calc(var(--v-setas) * -0.3) top
+      calc(var(--vh-top) - var(--v-setas) * 0.03) / var(--v-setas) auto no-repeat,
+    url('/textures/vineta-athame.png') right calc(var(--v-athame) * -0.38) top 48% / var(--v-athame) auto
+      no-repeat,
+    url('/textures/vineta-caldero.png') center bottom calc(var(--v-caldero) * -0.11) / var(--v-caldero) auto
+      no-repeat;
+  opacity: 0.2;
+  filter: blur(1.4px);
 }
 
 /* ---------- Cabecera: el título idéntico al de la portada ---------- */
