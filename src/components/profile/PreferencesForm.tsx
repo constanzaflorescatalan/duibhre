@@ -5,12 +5,13 @@ import type { IllustrationStyle, Preferences } from '../../types/domain';
 import { availableTimeZones } from '../../utils/timezone';
 import { ILLUSTRATION_STYLES } from '../../config/illustrationStyles';
 import { Link } from 'react-router-dom';
+import { appendDictation } from '../../utils/dictation';
+import { DictationButton } from '../common/DictationButton';
 
 /** Identidad (alias y dedicatoria) y preferencias de agenda (secciones 7.11 y 11). */
 export function PreferencesForm({ prefs, onSaved }: { prefs: Preferences; onSaved: () => void }) {
   const [displayName, setDisplayName] = useState(prefs.displayName ?? '');
   const [dedication, setDedication] = useState(prefs.dedication ?? '');
-  const [hemisphere, setHemisphere] = useState(prefs.hemisphere);
   const [timeZone, setTimeZone] = useState(prefs.timeZone);
   const [style, setStyle] = useState<IllustrationStyle>(prefs.preferredIllustrationStyle);
   const [status, setStatus] = useState<{ ok: boolean; text: string } | null>(null);
@@ -25,7 +26,8 @@ export function PreferencesForm({ prefs, onSaved }: { prefs: Preferences; onSave
       await savePreferences({
         displayName,
         dedication,
-        hemisphere,
+        // Este grimorio se usa solo en el hemisferio sur.
+        hemisphere: 'south',
         timeZone,
         preferredIllustrationStyle: style,
       });
@@ -57,40 +59,25 @@ export function PreferencesForm({ prefs, onSaved }: { prefs: Preferences; onSave
           </span>
           <textarea
             className="input input--journal"
-            rows={3}
+            rows={5}
             maxLength={500}
             value={dedication}
             onChange={(e) => setDedication(e.target.value)}
           />
         </label>
-        <Link to="/dedicatoria" className="btn btn--ghost btn--small">
-          Ver la página de dedicatoria
-        </Link>
+        <div className="field-actions">
+          <DictationButton
+            label="Dictar dedicatoria"
+            onText={(piece) => setDedication((prev) => appendDictation(prev, piece, 500))}
+          />
+          <Link to="/dedicatoria" className="btn btn--ghost btn--small">
+            Ver la página de dedicatoria
+          </Link>
+        </div>
       </section>
 
       <section className="profile-section">
         <h2 className="section-title">Preferencias</h2>
-        <fieldset className="form-field radio-row">
-          <legend className="form-field__label">Hemisferio</legend>
-          <label className="switch">
-            <input
-              type="radio"
-              name="hemisferio"
-              checked={hemisphere === 'south'}
-              onChange={() => setHemisphere('south')}
-            />
-            <span>Sur</span>
-          </label>
-          <label className="switch">
-            <input
-              type="radio"
-              name="hemisferio"
-              checked={hemisphere === 'north'}
-              onChange={() => setHemisphere('north')}
-            />
-            <span>Norte</span>
-          </label>
-        </fieldset>
         <label className="form-field">
           <span className="form-field__label">Zona horaria de la agenda</span>
           <select className="input" value={timeZone} onChange={(e) => setTimeZone(e.target.value)}>
@@ -116,6 +103,10 @@ export function PreferencesForm({ prefs, onSaved }: { prefs: Preferences; onSave
           </select>
         </label>
         <dl className="pref-list">
+          <div>
+            <dt>Hemisferio</dt>
+            <dd>Sur (lunas, esbats y sabbats se calculan para el sur)</dd>
+          </div>
           <div>
             <dt>Idioma</dt>
             <dd>Español de Chile</dd>
