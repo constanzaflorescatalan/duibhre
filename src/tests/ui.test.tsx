@@ -11,16 +11,24 @@ function renderAt(path: string) {
 }
 
 describe('Índice', () => {
-  it('muestra seis sectores accesibles y Naturaleza seleccionada por defecto', async () => {
+  it('muestra solo la rueda, con el centro (índice) activo y sin panel ni buscador', async () => {
     renderAt('/indice');
     const wheel = await screen.findByRole('group', { name: /rueda de las seis familias/i });
-    const sectors = within(wheel).getAllByRole('button');
+    const sectors = within(wheel).getAllByRole('button', { name: /^(?!Índice)/ });
     expect(sectors).toHaveLength(6);
-    expect(within(wheel).getByRole('button', { name: /^Naturaleza/ })).toHaveAttribute(
-      'aria-pressed',
-      'true',
-    );
-    expect(screen.getByRole('heading', { name: 'Naturaleza' })).toBeInTheDocument();
+    expect(within(wheel).getByRole('button', { name: /^Índice/ })).toHaveAttribute('aria-pressed', 'true');
+    for (const s of sectors) expect(s).toHaveAttribute('aria-pressed', 'false');
+    expect(screen.queryByRole('link', { name: /Abrir capítulo/ })).not.toBeInTheDocument();
+    expect(screen.queryByText(/Buscar en mi grimorio…/)).not.toBeInTheDocument();
+  });
+
+  it('el centro vuelve a dejar solo la rueda', async () => {
+    const router = renderAt('/indice?familia=alquimia');
+    const wheel = await screen.findByRole('group', { name: /rueda/i });
+    expect(screen.getByRole('heading', { name: 'Alquimia' })).toBeInTheDocument();
+    await userEvent.click(within(wheel).getByRole('button', { name: /^Índice/ }));
+    expect(screen.queryByRole('heading', { name: 'Alquimia' })).not.toBeInTheDocument();
+    expect(router.state.location.search).toBe('');
   });
 
   it('al tocar un sector actualiza el panel sin quitar la rueda', async () => {
@@ -47,12 +55,6 @@ describe('Índice', () => {
     );
   });
 
-  it('ofrece el índice en lista con los 13 capítulos', async () => {
-    renderAt('/indice');
-    await userEvent.click(await screen.findByRole('button', { name: /ver índice en lista/i }));
-    const list = screen.getByRole('navigation', { name: /índice en lista/i });
-    expect(within(list).getAllByRole('link')).toHaveLength(13);
-  });
 });
 
 describe('Navbar y capítulos', () => {

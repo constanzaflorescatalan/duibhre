@@ -395,3 +395,37 @@
     display: none;
   }
 }
+
+/* ---------- Índice: solo la rueda; el centro es el índice ---------- */
+.index-page--wheel-only {
+  min-height: calc(100dvh - 190px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.index-page--wheel-only .wheel {
+  width: min(100%, 460px);
+  margin-bottom: 0;
+}
+
+.wheel__center {
+  cursor: pointer;
+  outline: none;
+}
+
+.wheel__center-glow {
+  fill: none;
+  stroke: #b8e39a;
+  stroke-width: 3;
+}
+
+.wheel__center:focus-visible > circle:not(.wheel__center-glow) {
+  stroke: #e8d6a6;
+  stroke-width: 4;
+  stroke-dasharray: 6 4;
+}
+
+#panel-familia {
+  scroll-margin-top: 96px;
+}

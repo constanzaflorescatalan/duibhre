@@ -9,11 +9,13 @@ import { Triquetra } from '../ornaments/Ornaments';
  * elegida: pergamino pintado, separadores y aro de oro antiguo, sector activo
  * con luz verde suave y medallón central con triquetra.
  * Cada sector es un botón accesible con `aria-pressed`; las flechas recorren
- * la rueda. Tocar un sector solo selecciona: no navega.
+ * la rueda y Escape vuelve al centro. Tocar un sector solo selecciona: no navega.
+ * El medallón central es el índice: deja la rueda sin familia elegida.
  */
 interface Props {
-  selected: FamilyId;
-  onSelect: (id: FamilyId) => void;
+  /** Familia elegida, o `null` cuando está activo el centro (el índice solo). */
+  selected: FamilyId | null;
+  onSelect: (id: FamilyId | null) => void;
 }
 
 const SIZE = 400;
@@ -53,6 +55,8 @@ function star(x: number, y: number, r: number) {
 
 export function FamilyWheel({ selected, onSelect }: Props) {
   const refs = useRef<(SVGGElement | null)[]>([]);
+  const centerRef = useRef<SVGGElement>(null);
+  const centerActive = selected === null;
 
   const handleKey = (event: KeyboardEvent<SVGGElement>, index: number) => {
     const n = FAMILIES.length;
@@ -67,9 +71,22 @@ export function FamilyWheel({ selected, onSelect }: Props) {
       onSelect(FAMILIES[next].id);
       return;
     }
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      centerRef.current?.focus();
+      onSelect(null);
+      return;
+    }
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       onSelect(FAMILIES[index].id);
+    }
+  };
+
+  const handleCenterKey = (event: KeyboardEvent<SVGGElement>) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      onSelect(null);
     }
   };
 
@@ -192,8 +209,27 @@ export function FamilyWheel({ selected, onSelect }: Props) {
           ) : null,
         )}
 
-        {/* Medallón central con triquetra */}
-        <g pointerEvents="none">
+        {/* Medallón central con triquetra: es el índice (sin familia elegida). */}
+        <g
+          ref={centerRef}
+          className={`wheel__center${centerActive ? ' is-selected' : ''}`}
+          role="button"
+          tabIndex={0}
+          aria-pressed={centerActive}
+          aria-label="Índice: ver solo la rueda"
+          onClick={() => onSelect(null)}
+          onKeyDown={handleCenterKey}
+        >
+          {centerActive && (
+            <circle
+              cx={C}
+              cy={C}
+              r={R_INNER + 4}
+              className="wheel__center-glow"
+              filter="url(#softGlow)"
+              pointerEvents="none"
+            />
+          )}
           <circle cx={C} cy={C} r={R_INNER} fill="#12261d" stroke="#c9ab72" strokeWidth="2.4" />
           <circle
             cx={C}
