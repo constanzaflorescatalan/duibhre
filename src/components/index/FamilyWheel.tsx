@@ -22,8 +22,8 @@ const R_OUTER = 190;
 const R_INNER = 48;
 /** Distancia del centro del bloque ilustración+nombre por sector (arriba hay más espacio). */
 const R_CENTROID = [130, 118, 118, 122, 118, 118];
-const IMG_W = 88;
-const IMG_H = 60;
+const IMG_W = 72;
+const IMG_H = 72;
 const SWEEP = 360 / FAMILIES.length;
 
 function polar(r: number, deg: number) {
@@ -145,10 +145,10 @@ export function FamilyWheel({ selected, onSelect }: Props) {
                 className="wheel__art"
                 href={art.src}
                 x={c.x - IMG_W / 2}
-                y={c.y - 52}
+                y={c.y - 62}
                 width={IMG_W}
                 height={IMG_H}
-                preserveAspectRatio="xMidYMid slice"
+                preserveAspectRatio="xMidYMid meet"
                 aria-hidden="true"
               />
               <text className="wheel__label" x={c.x} y={c.y + 25} textAnchor="middle">
