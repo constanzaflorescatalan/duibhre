@@ -9,7 +9,7 @@ export function NotFoundPage() {
         title="Esta página no existe en el grimorio"
         description="Puede que el enlace esté incompleto o que la página haya cambiado de lugar."
         action={
-          <Link to="/indice" className="btn btn--primary">
+          <Link to="/inicio" className="btn btn--primary">
             Volver al índice
           </Link>
         }

@@ -1,16 +1,16 @@
-import { ArrowLeft, Search, UserRound } from 'lucide-react';
+import { ArrowLeft, Search } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import titleArt from '../../assets/cover/titulo-duibhre.jpg';
 import { UI } from '../../config/uiCopy';
 import { useBack } from '../../hooks/useBack';
 import { ROOT_PATHS, logicalParent } from '../../utils/navigation';
 
-/** Cabecera discreta: volver (fuera de destinos raíz), marca (lleva a la portada), búsqueda y perfil. */
+/** Cabecera discreta: volver (fuera de destinos raíz), marca (lleva a la portada) y búsqueda. */
 export function TopBar() {
   const { pathname } = useLocation();
   const isRoot = ROOT_PATHS.includes(pathname);
   const goBack = useBack(logicalParent(pathname));
-  const showSearch = pathname === '/indice' || pathname.startsWith('/capitulos');
+  const showSearch = pathname === '/inicio' || pathname.startsWith('/capitulos');
 
   return (
     <header className="topbar">
@@ -32,14 +32,6 @@ export function TopBar() {
             <Search size={21} aria-hidden="true" />
           </Link>
         )}
-        <Link
-          to="/perfil"
-          className="icon-btn icon-btn--avatar"
-          aria-label="Mi perfil"
-          aria-current={pathname === '/perfil' ? 'page' : undefined}
-        >
-          <UserRound size={20} aria-hidden="true" />
-        </Link>
       </div>
     </header>
   );

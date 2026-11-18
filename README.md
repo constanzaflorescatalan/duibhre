@@ -56,9 +56,9 @@ Las memorias también tienen fotos (tomar o subir, con texto alternativo); se gu
 | Funciona hoy                                                                       | Llega después                                                                                                   |
 | ---------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
 | Portada aprobada con «Abrir grimorio»                                              | Etapa 2: crear/editar/archivar fichas, notas, favoritos, fotos, exportar JSON                                   |
-| Navbar de cinco accesos + perfil desde el avatar                                   | Etapa 3: eventos de agenda, recordatorios, vínculos nota ↔ ficha ↔ evento, ajustes de hemisferio y zona horaria |
+| Navbar: Inicio · Perfil · Crear · Agenda · Bitácora                                | Etapa 3: eventos de agenda, recordatorios, vínculos nota ↔ ficha ↔ evento, ajustes de hemisferio y zona horaria |
 | Rueda de 6 familias + panel de pergamino (con teclado y lector de pantalla)        | Etapa 4: ilustración por IA desde backend, cuentas, sincronización, calendarios externos                        |
-| Índice alternativo en lista                                                        |                                                                                                                 |
+| Inicio con la rueda de 6 familias (el centro es el índice)                         |                                                                                                                 |
 | 13 capítulos y todos sus subtemas desde configuración                              |                                                                                                                 |
 | Páginas de capítulo (pestañas, buscador, filtros, estados vacíos), subtema y ficha |                                                                                                                 |
 | Búsqueda global en capítulos, subtemas y fichas                                    |                                                                                                                 |
@@ -92,8 +92,8 @@ npm run dev        # http://localhost:5173
 
 ```text
 /                                            Portada
-/inicio                                      Inicio
-/indice?familia=naturaleza                   Rueda de 6 familias + panel
+/inicio?familia=naturaleza                   Inicio: rueda de 6 familias + panel al elegir
+/indice                                      Redirige a /inicio (enlaces antiguos)
 /capitulos/:chapterId                        Capítulo
 /capitulos/:chapterId/subtemas/:subtopicId   Subtema
 /fichas/:entryId                             Detalle de ficha

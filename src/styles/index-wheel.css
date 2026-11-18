@@ -396,19 +396,7 @@
   }
 }
 
-/* ---------- Índice: solo la rueda; el centro es el índice ---------- */
-.index-page--wheel-only {
-  min-height: calc(100dvh - 190px);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.index-page--wheel-only .wheel {
-  width: min(100%, 460px);
-  margin-bottom: 0;
-}
-
+/* ---------- Medallón central: el índice ---------- */
 .wheel__center {
   cursor: pointer;
   outline: none;

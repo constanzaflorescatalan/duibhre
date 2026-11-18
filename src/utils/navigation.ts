@@ -10,9 +10,9 @@ export function hasInAppHistory(): boolean {
 export function logicalParent(pathname: string): string {
   const parts = pathname.split('/').filter(Boolean);
   if (parts[0] === 'capitulos' && parts.length >= 4) return `/capitulos/${parts[1]}`;
-  if (parts[0] === 'capitulos') return '/indice';
+  if (parts[0] === 'capitulos') return '/inicio';
   if (parts[0] === 'fichas' && parts[2] === 'editar') return `/fichas/${parts[1]}`;
-  if (parts[0] === 'fichas') return '/indice';
+  if (parts[0] === 'fichas') return '/inicio';
   if (parts[0] === 'crear' && parts.length > 1) return '/crear';
   if (parts[0] === 'agenda' && parts[3] === 'editar') return `/agenda/eventos/${parts[2]}`;
   if (parts[0] === 'agenda' && parts.length > 1) return '/agenda';
@@ -23,13 +23,18 @@ export function logicalParent(pathname: string): string {
 }
 
 /** Destinos raíz: muestran la navbar resaltada y no llevan flecha de volver. */
-export const ROOT_PATHS = ['/inicio', '/indice', '/crear', '/agenda', '/bitacora'];
+export const ROOT_PATHS = ['/inicio', '/perfil', '/crear', '/agenda', '/bitacora'];
 
 /** Qué pestaña de la navbar queda activa para una ruta de detalle. */
 export function activeNavFor(pathname: string): string | null {
-  if (pathname.startsWith('/inicio')) return '/inicio';
-  if (pathname.startsWith('/indice') || pathname.startsWith('/capitulos') || pathname.startsWith('/fichas'))
-    return '/indice';
+  if (
+    pathname.startsWith('/inicio') ||
+    pathname.startsWith('/indice') ||
+    pathname.startsWith('/capitulos') ||
+    pathname.startsWith('/fichas')
+  )
+    return '/inicio';
+  if (pathname.startsWith('/perfil') || pathname.startsWith('/dedicatoria')) return '/perfil';
   if (pathname.startsWith('/crear')) return '/crear';
   if (pathname.startsWith('/agenda')) return '/agenda';
   if (pathname.startsWith('/bitacora')) return '/bitacora';

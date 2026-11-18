@@ -224,7 +224,7 @@ export function ChapterPage() {
       </div>
 
       <div className="page-footer-actions">
-        <Link to={`/indice?familia=${family.id}`} className="btn btn--ghost">
+        <Link to={`/inicio?familia=${family.id}`} className="btn btn--ghost">
           Volver al índice
         </Link>
       </div>

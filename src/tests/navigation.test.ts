@@ -5,7 +5,7 @@ import { todayInTimeZone } from '../utils/dates';
 
 describe('navegación', () => {
   it('resuelve el padre lógico para enlaces directos', () => {
-    expect(logicalParent('/capitulos/gemas')).toBe('/indice');
+    expect(logicalParent('/capitulos/gemas')).toBe('/inicio');
     expect(logicalParent('/capitulos/gemas/subtemas/cristales')).toBe('/capitulos/gemas');
     expect(logicalParent('/fichas/x/editar')).toBe('/fichas/x');
     expect(logicalParent('/crear/ficha')).toBe('/crear');
@@ -13,10 +13,10 @@ describe('navegación', () => {
   });
 
   it('mantiene resaltado el origen en pantallas de detalle', () => {
-    expect(activeNavFor('/capitulos/velas')).toBe('/indice');
-    expect(activeNavFor('/fichas/ejemplo-lavanda')).toBe('/indice');
+    expect(activeNavFor('/capitulos/velas')).toBe('/inicio');
+    expect(activeNavFor('/fichas/ejemplo-lavanda')).toBe('/inicio');
     expect(activeNavFor('/crear/nota')).toBe('/crear');
-    expect(activeNavFor('/perfil')).toBeNull();
+    expect(activeNavFor('/perfil')).toBe('/perfil');
   });
 });
 

@@ -8,7 +8,7 @@ export const UI = {
 
   nav: {
     home: 'Inicio',
-    index: 'Índice',
+    profile: 'Perfil',
     create: 'Crear',
     agenda: 'Agenda',
     journal: 'Bitácora',

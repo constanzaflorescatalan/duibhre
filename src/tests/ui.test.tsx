@@ -12,7 +12,8 @@ function renderAt(path: string) {
 
 describe('Índice', () => {
   it('muestra solo la rueda, con el centro (índice) activo y sin panel ni buscador', async () => {
-    renderAt('/indice');
+    renderAt('/inicio');
+    expect(await screen.findByRole('heading', { name: 'Mi grimorio' })).toBeInTheDocument();
     const wheel = await screen.findByRole('group', { name: /rueda de las seis familias/i });
     const sectors = within(wheel).getAllByRole('button', { name: /^(?!Índice)/ });
     expect(sectors).toHaveLength(6);
@@ -23,7 +24,7 @@ describe('Índice', () => {
   });
 
   it('el centro vuelve a dejar solo la rueda', async () => {
-    const router = renderAt('/indice?familia=alquimia');
+    const router = renderAt('/inicio?familia=alquimia');
     const wheel = await screen.findByRole('group', { name: /rueda/i });
     expect(screen.getByRole('heading', { name: 'Alquimia' })).toBeInTheDocument();
     await userEvent.click(within(wheel).getByRole('button', { name: /^Índice/ }));
@@ -31,8 +32,15 @@ describe('Índice', () => {
     expect(router.state.location.search).toBe('');
   });
 
+  it('los enlaces antiguos a /indice llevan a Inicio con la familia', async () => {
+    const router = renderAt('/indice?familia=cosmos');
+    await screen.findByRole('group', { name: /rueda/i });
+    expect(router.state.location.pathname).toBe('/inicio');
+    expect(router.state.location.search).toBe('?familia=cosmos');
+  });
+
   it('al tocar un sector actualiza el panel sin quitar la rueda', async () => {
-    const router = renderAt('/indice');
+    const router = renderAt('/inicio');
     const wheel = await screen.findByRole('group', { name: /rueda/i });
     await userEvent.click(within(wheel).getByRole('button', { name: /^Espíritu/ }));
     expect(screen.getByRole('heading', { name: 'Espíritu' })).toBeInTheDocument();
@@ -43,7 +51,7 @@ describe('Índice', () => {
   });
 
   it('respeta ?familia= y la tecla flecha recorre la rueda', async () => {
-    renderAt('/indice?familia=cosmos');
+    renderAt('/inicio?familia=cosmos');
     const wheel = await screen.findByRole('group', { name: /rueda/i });
     const cosmos = within(wheel).getByRole('button', { name: /^Cosmos/ });
     expect(cosmos).toHaveAttribute('aria-pressed', 'true');
@@ -62,9 +70,8 @@ describe('Navbar y capítulos', () => {
     renderAt('/capitulos/velas');
     const nav = await screen.findByRole('navigation', { name: /navegación principal/i });
     const links = within(nav).getAllByRole('link');
-    expect(links.map((l) => l.textContent)).toEqual(['Inicio', 'Índice', 'Crear', 'Agenda', 'Bitácora']);
-    expect(within(nav).getByRole('link', { name: 'Índice' })).toHaveAttribute('aria-current', 'page');
-    expect(screen.getByRole('link', { name: 'Mi perfil' })).toBeInTheDocument();
+    expect(links.map((l) => l.textContent)).toEqual(['Inicio', 'Perfil', 'Crear', 'Agenda', 'Bitácora']);
+    expect(within(nav).getByRole('link', { name: 'Inicio' })).toHaveAttribute('aria-current', 'page');
     expect(screen.getByRole('button', { name: 'Volver' })).toBeInTheDocument();
   });
 

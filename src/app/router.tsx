@@ -10,7 +10,7 @@ import { EventFormPage } from '../pages/EventFormPage';
 import { EventPage } from '../pages/EventPage';
 import { EntryPage } from '../pages/EntryPage';
 import { HomePage } from '../pages/HomePage';
-import { IndexPage } from '../pages/IndexPage';
+import { IndexRedirect } from '../pages/IndexRedirect';
 import { JournalFormPage } from '../pages/JournalFormPage';
 import { JournalPage } from '../pages/JournalPage';
 import { NotFoundPage } from '../pages/NotFoundPage';
@@ -26,7 +26,7 @@ export const routes: RouteObject[] = [
     element: <AppShell />,
     children: [
       { path: '/inicio', element: <HomePage /> },
-      { path: '/indice', element: <IndexPage /> },
+      { path: '/indice', element: <IndexRedirect /> },
       { path: '/capitulos/:chapterId', element: <ChapterPage /> },
       { path: '/capitulos/:chapterId/subtemas/:subtopicId', element: <SubtopicPage /> },
       { path: '/fichas/:entryId', element: <EntryPage /> },
