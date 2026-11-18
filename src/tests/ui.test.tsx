@@ -62,7 +62,6 @@ describe('Índice', () => {
       'true',
     );
   });
-
 });
 
 describe('Navbar y capítulos', () => {

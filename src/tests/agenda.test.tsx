@@ -164,7 +164,9 @@ describe('cielo de la agenda', () => {
     expect(lunas).not.toBeChecked();
     expect(document.querySelectorAll('.calendar__moon')).toHaveLength(0);
     await userEvent.click(lunas);
-    await waitFor(() => expect(document.querySelectorAll('.calendar__moon').length).toBeGreaterThanOrEqual(28));
+    await waitFor(() =>
+      expect(document.querySelectorAll('.calendar__moon').length).toBeGreaterThanOrEqual(28),
+    );
     expect(screen.getByRole('checkbox', { name: /Esbats/ })).toBeInTheDocument();
     expect(screen.getByRole('checkbox', { name: /Sabbats/ })).toBeInTheDocument();
     expect(screen.getByRole('checkbox', { name: /Luna vacía de curso/ })).toBeInTheDocument();
