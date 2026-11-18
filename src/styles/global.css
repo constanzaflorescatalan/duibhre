@@ -8,10 +8,15 @@
 html {
   -webkit-text-size-adjust: 100%;
   color-scheme: dark;
+  /* Sin rebote elástico al tirar más allá del borde: la cabecera y la navbar no se mueven. */
+  overscroll-behavior-y: none;
+  /* Los saltos de foco y anclas no quedan tapados por la cabecera fija. */
+  scroll-padding-top: calc(86px + env(safe-area-inset-top));
 }
 
 body {
   margin: 0;
+  overscroll-behavior-y: none;
   min-height: 100dvh;
   font-family: var(--font-serif);
   font-size: 1.125rem;
