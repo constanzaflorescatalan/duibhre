@@ -96,3 +96,15 @@ describe('Navbar y capítulos', () => {
     expect(screen.getByText(/no se ha generado ninguna imagen/i)).toBeInTheDocument();
   });
 });
+
+describe('Portada', () => {
+  it('no tiene botón «Abrir grimorio» aparte: la triquetra abre el grimorio', async () => {
+    const router = renderAt('/');
+    const triquetra = await screen.findByRole('button', { name: 'Abrir grimorio' });
+    expect(screen.getAllByRole('button')).toHaveLength(1);
+    expect(triquetra.tagName.toLowerCase()).toBe('g');
+    await userEvent.click(triquetra);
+    await new Promise((r) => setTimeout(r, 750));
+    expect(router.state.location.pathname).toBe('/inicio');
+  });
+});
