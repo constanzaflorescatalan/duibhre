@@ -3,6 +3,7 @@ import { AppShell } from '../components/layout/AppShell';
 import { AgendaPage } from '../pages/AgendaPage';
 import { ChapterPage } from '../pages/ChapterPage';
 import { CoverPage } from '../pages/CoverPage';
+import { DedicationPage } from '../pages/DedicationPage';
 import { CreatePage } from '../pages/CreatePage';
 import { EntryFormPage } from '../pages/EntryFormPage';
 import { EventFormPage } from '../pages/EventFormPage';
@@ -42,6 +43,7 @@ export const routes: RouteObject[] = [
       { path: '/bitacora/:recordId/editar', element: <JournalFormPage mode="edit" /> },
       { path: '/buscar', element: <SearchPage /> },
       { path: '/perfil', element: <ProfilePage /> },
+      { path: '/dedicatoria', element: <DedicationPage /> },
       { path: '*', element: <NotFoundPage /> },
     ],
   },

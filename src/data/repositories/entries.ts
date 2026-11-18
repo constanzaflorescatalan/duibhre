@@ -28,6 +28,13 @@ export async function getEntry(id: string): Promise<GrimorioEntry | undefined> {
   return SEED_ENTRIES.find((e) => e.id === id) ?? (await db.entries.get(id));
 }
 
+/** Fichas personales que mencionan a esta como relacionada (relación inversa). */
+export async function listEntriesRelatingTo(id: string): Promise<GrimorioEntry[]> {
+  return (await db.entries.where('relatedEntryIds').equals(id).toArray()).filter(
+    (e) => e.status !== 'archived',
+  );
+}
+
 export async function countPersonalEntries(): Promise<number> {
   return db.entries.filter((e) => e.status !== 'archived').count();
 }
@@ -53,6 +60,7 @@ export const entryInputSchema = z.object({
   extraFields: z.record(z.string(), z.unknown()),
   sources: z.array(z.object({ title: z.string().trim().min(1), url: z.string().optional() })),
   status: z.enum(['draft', 'saved']),
+  relatedEntryIds: z.array(z.string()).max(100).optional(),
 });
 
 export type EntryInput = z.infer<typeof entryInputSchema>;
@@ -134,7 +142,9 @@ export async function saveEntry({ id, input, keptMedia = [], newImages = [] }: S
       blocks: existing?.blocks ?? [],
       extraFields: data.extraFields,
       media: [...keptMedia, ...added],
-      relatedEntryIds: existing?.relatedEntryIds ?? [],
+      relatedEntryIds: data.relatedEntryIds
+        ? [...new Set(data.relatedEntryIds)].filter((rid) => rid !== existing?.id)
+        : (existing?.relatedEntryIds ?? []),
       sources: data.sources,
       createdAt: existing?.createdAt ?? now,
       updatedAt: now,
@@ -183,6 +193,12 @@ export async function deleteEntry(id: string): Promise<void> {
       .modify((record) => {
         record.linkedEntryIds = record.linkedEntryIds.filter((linked) => linked !== id);
       });
+    await db.entries
+      .where('relatedEntryIds')
+      .equals(id)
+      .modify((other) => {
+        other.relatedEntryIds = other.relatedEntryIds.filter((rid) => rid !== id);
+      });
     for (const media of entry.media) {
       if (media.originalBlobId) await db.blobs.delete(media.originalBlobId);
       if (media.illustratedBlobId) await db.blobs.delete(media.illustratedBlobId);
@@ -205,6 +221,7 @@ export async function copySeedToPersonal(seedId: string): Promise<GrimorioEntry>
       extraFields: structuredClone(seed.extraFields),
       sources: seed.sources ? structuredClone(seed.sources) : [],
       status: 'draft',
+      relatedEntryIds: [...seed.relatedEntryIds],
     },
   });
 }

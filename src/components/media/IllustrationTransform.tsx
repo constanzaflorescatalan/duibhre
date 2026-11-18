@@ -1,5 +1,6 @@
 import { Wand2 } from 'lucide-react';
-import { useId, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
+import { getPreferences } from '../../data/repositories/preferences';
 import { ILLUSTRATION_STYLES } from '../../config/illustrationStyles';
 import { UI } from '../../config/uiCopy';
 import type { IllustrationStyle } from '../../types/domain';
@@ -11,6 +12,18 @@ import type { IllustrationStyle } from '../../types/domain';
  */
 export function IllustrationTransform({ hasImage }: { hasImage: boolean }) {
   const [style, setStyle] = useState<IllustrationStyle>('botanico');
+  const touched = useRef(false);
+
+  // Parte con el estilo preferido del Perfil, salvo que la persona ya haya elegido otro.
+  useEffect(() => {
+    let alive = true;
+    getPreferences().then((p) => {
+      if (alive && !touched.current) setStyle(p.preferredIllustrationStyle);
+    });
+    return () => {
+      alive = false;
+    };
+  }, []);
   const [showNotice, setShowNotice] = useState(false);
   const name = useId();
   const noticeId = useId();
@@ -26,7 +39,10 @@ export function IllustrationTransform({ hasImage }: { hasImage: boolean }) {
               name={name}
               value={s.id}
               checked={style === s.id}
-              onChange={() => setStyle(s.id)}
+              onChange={() => {
+                touched.current = true;
+                setStyle(s.id);
+              }}
               className="visually-hidden"
             />
             {s.label}

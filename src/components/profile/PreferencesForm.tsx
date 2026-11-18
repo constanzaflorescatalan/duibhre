@@ -1,8 +1,10 @@
 import { Save } from 'lucide-react';
 import { useMemo, useState, type FormEvent } from 'react';
 import { savePreferences } from '../../data/repositories/preferences';
-import type { Preferences } from '../../types/domain';
+import type { IllustrationStyle, Preferences } from '../../types/domain';
 import { availableTimeZones } from '../../utils/timezone';
+import { ILLUSTRATION_STYLES } from '../../config/illustrationStyles';
+import { Link } from 'react-router-dom';
 
 /** Identidad (alias y dedicatoria) y preferencias de agenda (secciones 7.11 y 11). */
 export function PreferencesForm({ prefs, onSaved }: { prefs: Preferences; onSaved: () => void }) {
@@ -10,6 +12,7 @@ export function PreferencesForm({ prefs, onSaved }: { prefs: Preferences; onSave
   const [dedication, setDedication] = useState(prefs.dedication ?? '');
   const [hemisphere, setHemisphere] = useState(prefs.hemisphere);
   const [timeZone, setTimeZone] = useState(prefs.timeZone);
+  const [style, setStyle] = useState<IllustrationStyle>(prefs.preferredIllustrationStyle);
   const [status, setStatus] = useState<{ ok: boolean; text: string } | null>(null);
   const [saving, setSaving] = useState(false);
   const zones = useMemo(() => availableTimeZones(), []);
@@ -19,7 +22,13 @@ export function PreferencesForm({ prefs, onSaved }: { prefs: Preferences; onSave
     setSaving(true);
     setStatus(null);
     try {
-      await savePreferences({ displayName, dedication, hemisphere, timeZone });
+      await savePreferences({
+        displayName,
+        dedication,
+        hemisphere,
+        timeZone,
+        preferredIllustrationStyle: style,
+      });
       setStatus({ ok: true, text: 'Preferencias guardadas.' });
       onSaved();
     } catch (err) {
@@ -54,6 +63,9 @@ export function PreferencesForm({ prefs, onSaved }: { prefs: Preferences; onSave
             onChange={(e) => setDedication(e.target.value)}
           />
         </label>
+        <Link to="/dedicatoria" className="btn btn--ghost btn--small">
+          Ver la página de dedicatoria
+        </Link>
       </section>
 
       <section className="profile-section">
@@ -85,6 +97,20 @@ export function PreferencesForm({ prefs, onSaved }: { prefs: Preferences; onSave
             {zones.map((z) => (
               <option key={z} value={z}>
                 {z}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="form-field">
+          <span className="form-field__label">Estilo de ilustración preferido</span>
+          <select
+            className="input"
+            value={style}
+            onChange={(e) => setStyle(e.target.value as IllustrationStyle)}
+          >
+            {ILLUSTRATION_STYLES.map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.label}
               </option>
             ))}
           </select>

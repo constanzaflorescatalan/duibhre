@@ -18,6 +18,7 @@ const prefsSchema = z.object({
   dedication: z.string().trim().max(500).optional(),
   hemisphere: z.enum(['south', 'north']),
   timeZone: z.string().refine(isValidTimeZone, 'Zona horaria no válida.'),
+  preferredIllustrationStyle: z.enum(['botanico', 'tinta-antigua', 'acuarela-grimorio']),
 });
 
 export async function getPreferences(): Promise<Preferences> {

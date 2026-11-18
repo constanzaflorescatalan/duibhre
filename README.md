@@ -21,6 +21,13 @@ Proyecto de diseño UX/UI + front-end (portafolio) y grimorio de uso personal.
   (por defecto `America/Santiago`). Hemisferio, zona horaria, alias y dedicatoria se editan en Perfil.
 - La app **no calcula** sabbats ni fases lunares: se agendan a mano desde una fuente confiable.
 
+### Detalles pulidos
+
+- Fichas relacionadas: se eligen en el formulario y se ven en ambos sentidos (también desde las fichas de ejemplo).
+- Página de dedicatoria `/dedicatoria`, enlazada desde Inicio y Perfil (nunca en la portada).
+- Estilo de ilustración preferido en Perfil; el selector de «Transformar en ilustración» parte con él.
+- Los avisos «guardado» se muestran una vez y no reaparecen al recargar.
+
 ## Etapa 2 — guardado local
 
 Ya funciona: crear, editar, guardar como borrador, marcar favoritas, archivar y eliminar fichas propias; copiar fichas de ejemplo a «Mis fichas»; tomar o subir fotos con texto alternativo editable. Todo se guarda en IndexedDB y persiste al recargar.

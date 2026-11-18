@@ -6,6 +6,7 @@ import { EntryForm } from '../components/entry/EntryForm';
 import { CHAPTERS, getChapter } from '../config/chapters';
 import { UI } from '../config/uiCopy';
 import { copySeedToPersonal, getEntry } from '../data/repositories/entries';
+import { listAllEntries } from '../data/repositories/allEntries';
 import { useAsync } from '../hooks/useAsync';
 import { useBack } from '../hooks/useBack';
 import { NotFoundPage } from './NotFoundPage';
@@ -23,6 +24,7 @@ export function EntryFormPage({ mode }: { mode: 'create' | 'edit' }) {
     () => (mode === 'edit' ? getEntry(entryId) : Promise.resolve(undefined)),
     [mode, entryId],
   );
+  const all = useAsync(listAllEntries, []);
   const [copyError, setCopyError] = useState<string | null>(null);
 
   const chapterParam = getChapter(params.get('capitulo') ?? undefined);
@@ -84,6 +86,7 @@ export function EntryFormPage({ mode }: { mode: 'create' | 'edit' }) {
         entry={entry}
         initialChapterId={initialChapterId}
         initialSubtopicId={initialSubtopicId}
+        allEntries={all.status === 'success' ? all.data : []}
         onCancel={back}
       />
     </Page>

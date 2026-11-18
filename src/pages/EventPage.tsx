@@ -1,6 +1,6 @@
 import { BellRing, NotebookPen, Pencil, Trash2, Unlink } from 'lucide-react';
 import { useState } from 'react';
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { EntryCard } from '../components/chapter/EntryCard';
 import { ConfirmDialog } from '../components/common/ConfirmDialog';
 import { Page } from '../components/common/Page';
@@ -11,6 +11,7 @@ import { getEntry } from '../data/repositories/entries';
 import { deleteEvent, getEvent, unlinkEvent } from '../data/repositories/events';
 import { getRecord } from '../data/repositories/journal';
 import { useAsync } from '../hooks/useAsync';
+import { useFlash } from '../hooks/useFlash';
 import { formatInZone } from '../utils/timezone';
 import { NotFoundPage } from './NotFoundPage';
 
@@ -18,8 +19,7 @@ import { NotFoundPage } from './NotFoundPage';
 export function EventPage() {
   const { eventId = '' } = useParams();
   const navigate = useNavigate();
-  const location = useLocation();
-  const justSaved = Boolean((location.state as { saved?: boolean } | null)?.saved);
+  const justSaved = Boolean(useFlash<boolean>('saved'));
   const [version, setVersion] = useState(0);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [error, setError] = useState<string | null>(null);

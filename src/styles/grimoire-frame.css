@@ -405,3 +405,81 @@
   box-shadow: 0 1px 4px rgba(53, 43, 36, 0.35);
   transform: rotate(-3deg);
 }
+
+/* ---------- Dedicatoria ---------- */
+.dedication-link {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0 auto var(--space-5);
+  max-width: 48ch;
+  padding: var(--space-3) var(--space-4);
+  text-align: center;
+  border-top: 1px solid rgba(168, 138, 87, 0.5);
+  border-bottom: 1px solid rgba(168, 138, 87, 0.5);
+  color: inherit;
+  text-decoration: none;
+}
+
+.dedication-link__text {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-family: var(--font-italic);
+  font-style: italic;
+  font-size: 1.12rem;
+  color: var(--ink-soft);
+}
+
+.dedication-link__cta {
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  color: var(--forest-middle);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.dedication-page__inner {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  min-height: 60dvh;
+  align-content: center;
+  text-align: center;
+  padding: var(--space-6) var(--space-2);
+}
+
+.dedication-page__mark {
+  color: var(--antique-gold);
+}
+
+.dedication-page__title {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  color: var(--forest-deep);
+}
+
+.dedication-page__text {
+  margin: var(--space-3) 0 0;
+  max-width: 36ch;
+  font-family: var(--font-italic);
+  font-style: italic;
+  font-size: 1.35rem;
+  line-height: 1.6;
+  color: var(--ink-brown);
+  white-space: pre-wrap;
+}
+
+.dedication-page__signature {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  color: var(--ink-soft);
+}
+
+.dedication-page__spark {
+  color: var(--antique-gold);
+}
+
+.dedication-page__empty {
+  max-width: 32ch;
+}

@@ -54,9 +54,10 @@ export function HomePage() {
       )}
 
       {prefs.status === 'success' && prefs.data.dedication && (
-        <blockquote className="dedication">
-          <p>{prefs.data.dedication}</p>
-        </blockquote>
+        <Link to="/dedicatoria" className="dedication-link">
+          <span className="dedication-link__text">«{prefs.data.dedication}»</span>
+          <span className="dedication-link__cta">Leer mi dedicatoria</span>
+        </Link>
       )}
 
       <nav className="home-paths" aria-labelledby="senderos-titulo">

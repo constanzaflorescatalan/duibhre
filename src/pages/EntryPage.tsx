@@ -10,7 +10,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import { useId, useState } from 'react';
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ConfirmDialog } from '../components/common/ConfirmDialog';
 import { EntryCard } from '../components/chapter/EntryCard';
 import { EmptyState } from '../components/common/EmptyState';
@@ -25,6 +25,7 @@ import {
   copySeedToPersonal,
   deleteEntry,
   getEntry,
+  listEntriesRelatingTo,
   setArchived,
   toggleFavorite,
 } from '../data/repositories/entries';
@@ -33,6 +34,7 @@ import { listRecordsForEntry } from '../data/repositories/journal';
 import { listEventsForEntry } from '../data/repositories/events';
 import { EventCard } from '../components/calendar/EventCard';
 import { useAsync } from '../hooks/useAsync';
+import { useFlash } from '../hooks/useFlash';
 import { formatDate } from '../utils/dates';
 import { NotFoundPage } from './NotFoundPage';
 
@@ -42,16 +44,21 @@ type Section = 'conocimiento' | 'anotaciones' | 'relaciones';
 export function EntryPage() {
   const { entryId = '' } = useParams();
   const navigate = useNavigate();
-  const location = useLocation();
-  const savedStatus = (location.state as { saved?: 'draft' | 'saved' } | null)?.saved;
+  const savedStatus = useFlash<'draft' | 'saved'>('saved');
   const [version, setVersion] = useState(0);
   const [actionError, setActionError] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const result = useAsync(() => getEntry(entryId), [entryId, version]);
   const related = useAsync(async () => {
     const entry = await getEntry(entryId);
-    const list = await Promise.all((entry?.relatedEntryIds ?? []).map((id) => getEntry(id)));
-    return list.filter((e) => e !== undefined);
+    const direct = await Promise.all((entry?.relatedEntryIds ?? []).map((id) => getEntry(id)));
+    const reverse = await listEntriesRelatingTo(entryId);
+    const seen = new Set<string>();
+    return [...direct, ...reverse].filter((e): e is NonNullable<typeof e> => {
+      if (!e || seen.has(e.id)) return false;
+      seen.add(e.id);
+      return true;
+    });
   }, [entryId, version]);
   const entryEvents = useAsync(() => listEventsForEntry(entryId), [entryId, version]);
   const notes = useAsync(() => listRecordsForEntry(entryId), [entryId, version]);

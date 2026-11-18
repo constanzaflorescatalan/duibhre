@@ -9,6 +9,7 @@ import type { ChapterId, GrimorioEntry } from '../../types/domain';
 import { ConfirmDialog } from '../common/ConfirmDialog';
 import { IllustrationTransform } from '../media/IllustrationTransform';
 import { PhotoUploader, type FormImage } from '../media/PhotoUploader';
+import { EntryLinker } from './EntryLinker';
 
 /** Estado del formulario: todo como texto; las listas, una línea por elemento. */
 interface FormState {
@@ -19,6 +20,7 @@ interface FormState {
   tags: string;
   sources: string;
   notes: string;
+  related: string[];
   extra: Record<string, string>;
 }
 
@@ -39,6 +41,7 @@ function toFormState(entry: GrimorioEntry | undefined, chapterId: ChapterId, sub
     tags: (entry?.tags ?? []).join(', '),
     sources: (entry?.sources ?? []).map((s) => (s.url ? `${s.title} | ${s.url}` : s.title)).join('\n'),
     notes: String(entry?.extraFields[NOTES_KEY] ?? ''),
+    related: entry?.relatedEntryIds ?? [],
     extra,
   };
 }
@@ -73,6 +76,7 @@ function toInput(state: FormState, status: 'draft' | 'saved'): EntryInput {
       return url ? { title, url } : { title };
     }),
     status,
+    relatedEntryIds: state.related,
   };
 }
 
@@ -80,6 +84,8 @@ interface Props {
   entry?: GrimorioEntry;
   initialChapterId: ChapterId;
   initialSubtopicId?: string;
+  /** Fichas disponibles para relacionar (ejemplo + personales). */
+  allEntries?: GrimorioEntry[];
   onCancel: () => void;
 }
 
@@ -87,7 +93,13 @@ interface Props {
  * Formulario de ficha (sección 7.7): secciones plegables, campos especiales
  * según la plantilla del capítulo, fotos y guardado transaccional.
  */
-export function EntryForm({ entry, initialChapterId, initialSubtopicId = '', onCancel }: Props) {
+export function EntryForm({
+  entry,
+  initialChapterId,
+  initialSubtopicId = '',
+  allEntries = [],
+  onCancel,
+}: Props) {
   const navigate = useNavigate();
   const initial = useMemo(
     () => toFormState(entry, initialChapterId, initialSubtopicId),
@@ -260,6 +272,16 @@ export function EntryForm({ entry, initialChapterId, initialSubtopicId = '', onC
 
       <details className="form-section" open>
         <summary>4 · Notas y correspondencias</summary>
+        <div className="form-field">
+          <span className="form-field__label">Fichas relacionadas</span>
+          <EntryLinker
+            label="Relacionar con otra ficha"
+            entries={allEntries}
+            value={state.related}
+            excludeId={entry?.id}
+            onChange={(ids) => set('related', ids)}
+          />
+        </div>
         <label className="form-field">
           <span className="form-field__label">Etiquetas (separadas por comas)</span>
           <input className="input" value={state.tags} onChange={(e) => set('tags', e.target.value)} />
