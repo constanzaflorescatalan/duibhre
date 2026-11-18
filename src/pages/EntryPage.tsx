@@ -30,6 +30,8 @@ import {
 } from '../data/repositories/entries';
 import { JournalCard } from '../components/journal/JournalCard';
 import { listRecordsForEntry } from '../data/repositories/journal';
+import { listEventsForEntry } from '../data/repositories/events';
+import { EventCard } from '../components/calendar/EventCard';
 import { useAsync } from '../hooks/useAsync';
 import { formatDate } from '../utils/dates';
 import { NotFoundPage } from './NotFoundPage';
@@ -51,6 +53,7 @@ export function EntryPage() {
     const list = await Promise.all((entry?.relatedEntryIds ?? []).map((id) => getEntry(id)));
     return list.filter((e) => e !== undefined);
   }, [entryId, version]);
+  const entryEvents = useAsync(() => listEventsForEntry(entryId), [entryId, version]);
   const notes = useAsync(() => listRecordsForEntry(entryId), [entryId, version]);
   const [section, setSection] = useState<Section>('conocimiento');
   const baseId = useId();
@@ -167,15 +170,10 @@ export function EntryPage() {
           <NotebookPen size={18} aria-hidden="true" />
           Añadir nota
         </Link>
-        <button
-          type="button"
-          className="btn btn--secondary btn--small"
-          disabled
-          title="Disponible en la Etapa 3"
-        >
+        <Link to={`/crear/evento?ficha=${entry.id}`} className="btn btn--secondary btn--small">
           <CalendarPlus size={18} aria-hidden="true" />
           Vincular al calendario
-        </button>
+        </Link>
       </div>
       {isSeed && (
         <p className="muted small">
@@ -279,6 +277,19 @@ export function EntryPage() {
           </>
         )}
 
+        {section === 'relaciones' && entryEvents.status === 'success' && entryEvents.data.length > 0 && (
+          <>
+            <h2 className="section-title">En la agenda</h2>
+            <ul className="journal-list">
+              {entryEvents.data.map((ev) => (
+                <li key={ev.id}>
+                  <EventCard event={ev} showDate />
+                </li>
+              ))}
+            </ul>
+            <h2 className="section-title">Fichas relacionadas</h2>
+          </>
+        )}
         {section === 'relaciones' &&
           (related.status === 'success' && related.data.length > 0 ? (
             <ul className="entry-list">

@@ -1,4 +1,4 @@
-import { CalendarClock, Heart, Pencil, Trash2 } from 'lucide-react';
+import { CalendarClock, CalendarPlus, Heart, Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { EntryCard } from '../components/chapter/EntryCard';
@@ -9,6 +9,8 @@ import { noteKindLabel } from '../config/noteKinds';
 import { getEntriesByIds } from '../data/repositories/allEntries';
 import { deleteRecord, getRecord, toggleRecordFavorite } from '../data/repositories/journal';
 import { useAsync } from '../hooks/useAsync';
+import { EventCard } from '../components/calendar/EventCard';
+import { listEventsForRecord } from '../data/repositories/events';
 import { formatDate, formatDateTime } from '../utils/dates';
 import { NotFoundPage } from './NotFoundPage';
 
@@ -24,7 +26,11 @@ export function RecordPage() {
 
   const data = useAsync(async () => {
     const record = await getRecord(recordId);
-    return { record, entries: record ? await getEntriesByIds(record.linkedEntryIds) : [] };
+    return {
+      record,
+      entries: record ? await getEntriesByIds(record.linkedEntryIds) : [],
+      events: record ? await listEventsForRecord(record.id) : [],
+    };
   }, [recordId, version]);
 
   if (data.status === 'loading') {
@@ -37,7 +43,7 @@ export function RecordPage() {
     );
   }
   if (data.status === 'error' || !data.data.record) return <NotFoundPage />;
-  const { record, entries } = data.data;
+  const { record, entries, events } = data.data;
 
   return (
     <Page>
@@ -88,6 +94,13 @@ export function RecordPage() {
         </button>
       </div>
 
+      <div className="button-row">
+        <Link to={`/crear/evento?nota=${record.id}`} className="btn btn--secondary btn--small">
+          <CalendarPlus size={18} aria-hidden="true" />
+          Añadir a agenda
+        </Link>
+      </div>
+
       <article className="journal-page">
         {record.body ? (
           <p className="journal-page__body">{record.body}</p>
@@ -109,8 +122,21 @@ export function RecordPage() {
       {record.followUpAt && (
         <p className="notice-line">
           <CalendarClock size={18} aria-hidden="true" />
-          Fecha próxima: {formatDate(record.followUpAt)}. Mostrarla en la Agenda llegará en la Etapa 3.
+          Fecha próxima: {formatDate(record.followUpAt)}. Aparece marcada en la Agenda.
         </p>
+      )}
+
+      {events.length > 0 && (
+        <>
+          <h2 className="section-title">En la agenda</h2>
+          <ul className="journal-list">
+            {events.map((ev) => (
+              <li key={ev.id}>
+                <EventCard event={ev} showDate />
+              </li>
+            ))}
+          </ul>
+        </>
       )}
 
       <h2 className="section-title">Fichas vinculadas</h2>

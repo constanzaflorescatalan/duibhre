@@ -4,8 +4,9 @@ import { AgendaPage } from '../pages/AgendaPage';
 import { ChapterPage } from '../pages/ChapterPage';
 import { CoverPage } from '../pages/CoverPage';
 import { CreatePage } from '../pages/CreatePage';
-import { CreatePlaceholderPage } from '../pages/CreatePlaceholderPage';
 import { EntryFormPage } from '../pages/EntryFormPage';
+import { EventFormPage } from '../pages/EventFormPage';
+import { EventPage } from '../pages/EventPage';
 import { EntryPage } from '../pages/EntryPage';
 import { HomePage } from '../pages/HomePage';
 import { IndexPage } from '../pages/IndexPage';
@@ -32,8 +33,10 @@ export const routes: RouteObject[] = [
       { path: '/crear', element: <CreatePage /> },
       { path: '/crear/ficha', element: <EntryFormPage mode="create" /> },
       { path: '/crear/nota', element: <JournalFormPage mode="create" /> },
-      { path: '/crear/evento', element: <CreatePlaceholderPage kind="evento" /> },
+      { path: '/crear/evento', element: <EventFormPage mode="create" /> },
       { path: '/agenda', element: <AgendaPage /> },
+      { path: '/agenda/eventos/:eventId', element: <EventPage /> },
+      { path: '/agenda/eventos/:eventId/editar', element: <EventFormPage mode="edit" /> },
       { path: '/bitacora', element: <JournalPage /> },
       { path: '/bitacora/:recordId', element: <RecordPage /> },
       { path: '/bitacora/:recordId/editar', element: <JournalFormPage mode="edit" /> },

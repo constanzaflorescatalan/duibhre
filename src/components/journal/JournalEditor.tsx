@@ -37,11 +37,20 @@ interface Props {
   entries: GrimorioEntry[];
   initialLinkedEntryId?: string;
   initialKind?: NoteKind;
+  /** Se ejecuta tras guardar (p. ej. vincular la memoria a un evento). */
+  afterSave?: (record: JournalRecord) => Promise<void>;
   onCancel: () => void;
 }
 
 /** «Dejar una memoria» (sección 7.8): un solo registro, vinculable a varias fichas. */
-export function JournalEditor({ record, entries, initialLinkedEntryId, initialKind, onCancel }: Props) {
+export function JournalEditor({
+  record,
+  entries,
+  initialLinkedEntryId,
+  initialKind,
+  afterSave,
+  onCancel,
+}: Props) {
   const navigate = useNavigate();
   const initial = useMemo(
     () => toState(record, initialLinkedEntryId, initialKind),
@@ -93,6 +102,7 @@ export function JournalEditor({ record, entries, initialLinkedEntryId, initialKi
           followUpAt: state.followUp ? `${state.followUp}T09:00` : undefined,
         },
       });
+      if (afterSave) await afterSave(saved);
       leavingRef.current = true;
       navigate(`/bitacora/${saved.id}`, { replace: true, state: { saved: true } });
     } catch (err) {
@@ -255,9 +265,7 @@ export function JournalEditor({ record, entries, initialLinkedEntryId, initialKi
             onChange={(e) => set('followUp', e.target.value)}
           />
         </label>
-        <p className="muted small">
-          Queda anotada en la memoria. Mostrarla en la Agenda llegará en la Etapa 3.
-        </p>
+        <p className="muted small">Aparecerá marcada en la Agenda ese día, sin duplicar la memoria.</p>
       </div>
 
       <div className="form-section form-section--actions">

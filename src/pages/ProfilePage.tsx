@@ -2,13 +2,14 @@ import { UserRound } from 'lucide-react';
 import { useState } from 'react';
 import { Page, PageHeader } from '../components/common/Page';
 import { DataSection } from '../components/profile/DataSection';
+import { PreferencesForm } from '../components/profile/PreferencesForm';
+import { getPreferences } from '../data/repositories/preferences';
 import { StageNotice } from '../components/common/StageNotice';
 import { UI } from '../config/uiCopy';
 import { countFavorites, countPersonalEntries } from '../data/repositories/entries';
 import { countEvents } from '../data/repositories/events';
 import { countJournalRecords } from '../data/repositories/journal';
 import { useAsync } from '../hooks/useAsync';
-import { DEFAULT_TIME_ZONE } from '../utils/dates';
 import { isReduceMotionOn, setReduceMotion } from '../utils/accessibility';
 
 /** Perfil `/perfil` (secciones 7.11 y 11). Espacio privado, no red social. */
@@ -23,6 +24,7 @@ export function ProfilePage() {
     }),
     [version],
   );
+  const prefs = useAsync(getPreferences, [version]);
   const [reduceMotion, setReduce] = useState(isReduceMotionOn());
 
   return (
@@ -36,14 +38,6 @@ export function ProfilePage() {
           </span>
         }
       />
-
-      <section className="profile-section">
-        <h2 className="section-title">Identidad del grimorio</h2>
-        <p className="muted">Aún no has elegido un alias, sello ni dedicatoria.</p>
-        <button type="button" className="btn btn--secondary" disabled title={UI.stage2}>
-          Editar mi perfil
-        </button>
-      </section>
 
       <section className="profile-section">
         <h2 className="section-title">Mi archivo</h2>
@@ -75,26 +69,12 @@ export function ProfilePage() {
         )}
       </section>
 
+      {prefs.status === 'success' && (
+        <PreferencesForm prefs={prefs.data} onSaved={() => setVersion((v) => v + 1)} />
+      )}
+
       <section className="profile-section">
-        <h2 className="section-title">Preferencias</h2>
-        <dl className="pref-list">
-          <div>
-            <dt>Idioma</dt>
-            <dd>Español de Chile</dd>
-          </div>
-          <div>
-            <dt>Hemisferio</dt>
-            <dd>Sur</dd>
-          </div>
-          <div>
-            <dt>Zona horaria</dt>
-            <dd>{DEFAULT_TIME_ZONE}</dd>
-          </div>
-          <div>
-            <dt>Tema</dt>
-            <dd>Cuero oscuro</dd>
-          </div>
-        </dl>
+        <h2 className="section-title">Accesibilidad</h2>
         <label className="switch">
           <input
             type="checkbox"
@@ -106,10 +86,7 @@ export function ProfilePage() {
           />
           <span>Reducir animaciones</span>
         </label>
-        <p className="muted small">
-          «Reducir animaciones» se aplica de inmediato. Editar hemisferio, zona horaria y formato de fecha
-          llega en la Etapa 3.
-        </p>
+        <p className="muted small">Se aplica de inmediato en este dispositivo.</p>
       </section>
 
       <DataSection onChanged={() => setVersion((v) => v + 1)} />

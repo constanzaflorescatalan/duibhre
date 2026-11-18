@@ -10,6 +10,9 @@ import { countPersonalEntries } from '../data/repositories/entries';
 import { countJournalRecords, listJournalRecords } from '../data/repositories/journal';
 import { JournalCard } from '../components/journal/JournalCard';
 import { useAsync } from '../hooks/useAsync';
+import { EventCard } from '../components/calendar/EventCard';
+import { listUpcomingEvents } from '../data/repositories/events';
+import { getPreferences } from '../data/repositories/preferences';
 
 /**
  * Inicio (sección 7.2). Sin fase lunar: no hay todavía una fuente
@@ -20,6 +23,8 @@ export function HomePage() {
     async () => ({ entries: await countPersonalEntries(), records: await countJournalRecords() }),
     [],
   );
+  const upcoming = useAsync(() => listUpcomingEvents(new Date().toISOString(), 3), []);
+  const prefs = useAsync(getPreferences, []);
   const lastRecord = useAsync(async () => (await listJournalRecords())[0], []);
   const isEmpty = counts.status === 'success' && counts.data.entries === 0 && counts.data.records === 0;
 
@@ -27,7 +32,11 @@ export function HomePage() {
     <Page>
       <PageHeader
         title={UI.pages.home.title}
-        subtitle={UI.pages.home.subtitle}
+        subtitle={
+          prefs.status === 'success' && prefs.data.displayName
+            ? `Bienvenida, ${prefs.data.displayName}. ${UI.pages.home.subtitle}`
+            : UI.pages.home.subtitle
+        }
         illustration={<MoonPhases className="home-moons" />}
       />
 
@@ -42,6 +51,12 @@ export function HomePage() {
             </Link>
           }
         />
+      )}
+
+      {prefs.status === 'success' && prefs.data.dedication && (
+        <blockquote className="dedication">
+          <p>{prefs.data.dedication}</p>
+        </blockquote>
       )}
 
       <nav className="home-paths" aria-labelledby="senderos-titulo">
@@ -72,7 +87,17 @@ export function HomePage() {
 
         <section className="home-card">
           <h2 className="home-card__title">Próximos acontecimientos</h2>
-          <p className="home-card__text">Aún no hay eventos en tu agenda.</p>
+          {upcoming.status === 'success' && upcoming.data.length > 0 ? (
+            <ul className="journal-list home-card__list">
+              {upcoming.data.map((ev) => (
+                <li key={ev.id}>
+                  <EventCard event={ev} showDate />
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="home-card__text">Aún no hay eventos próximos en tu agenda.</p>
+          )}
           <Link to="/agenda" className="btn btn--secondary">
             <CalendarDays size={18} aria-hidden="true" />
             Abrir agenda

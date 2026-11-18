@@ -11,21 +11,26 @@ import {
 } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import type { CalendarEvent } from '../../types/domain';
+import { dayKey } from '../../utils/dates';
 
 const WEEKDAYS = ['lu', 'ma', 'mi', 'ju', 'vi', 'sá', 'do'];
+
+export interface DayMarker {
+  color: string;
+}
 
 interface Props {
   month: Date;
   today: Date;
   selected: Date;
-  events: CalendarEvent[];
+  /** Marcas por día civil «YYYY-MM-DD» (ya calculado en la zona de cada evento). */
+  markers: Map<string, DayMarker[]>;
   onMonthChange: (d: Date) => void;
   onSelect: (d: Date) => void;
 }
 
 /** Vista mensual (semana comienza el lunes, es-CL). */
-export function MagicCalendar({ month, today, selected, events, onMonthChange, onSelect }: Props) {
+export function MagicCalendar({ month, today, selected, markers, onMonthChange, onSelect }: Props) {
   const days = eachDayOfInterval({
     start: startOfWeek(startOfMonth(month), { weekStartsOn: 1 }),
     end: endOfWeek(endOfMonth(month), { weekStartsOn: 1 }),
@@ -67,7 +72,7 @@ export function MagicCalendar({ month, today, selected, events, onMonthChange, o
         {Array.from({ length: days.length / 7 }, (_, w) => (
           <div role="row" className="calendar__row" key={w}>
             {days.slice(w * 7, w * 7 + 7).map((day) => {
-              const count = events.filter((e) => isSameDay(new Date(e.startAt), day)).length;
+              const marks = markers.get(dayKey(day)) ?? [];
               const classes = [
                 'calendar__day',
                 !isSameMonth(day, month) && 'is-outside',
@@ -84,11 +89,17 @@ export function MagicCalendar({ month, today, selected, events, onMonthChange, o
                   className={classes}
                   aria-selected={isSameDay(day, selected)}
                   aria-current={isSameDay(day, today) ? 'date' : undefined}
-                  aria-label={`${format(day, "EEEE d 'de' MMMM", { locale: es })}${count ? `, ${count} eventos` : ''}`}
+                  aria-label={`${format(day, "EEEE d 'de' MMMM", { locale: es })}${marks.length ? `, ${marks.length} ${marks.length === 1 ? 'elemento' : 'elementos'}` : ''}`}
                   onClick={() => onSelect(day)}
                 >
                   {format(day, 'd')}
-                  {count > 0 && <span className="calendar__dot" aria-hidden="true" />}
+                  {marks.length > 0 && (
+                    <span className="calendar__dots" aria-hidden="true">
+                      {marks.slice(0, 3).map((m, i) => (
+                        <span key={i} className="calendar__dot" style={{ background: m.color }} />
+                      ))}
+                    </span>
+                  )}
                 </button>
               );
             })}
