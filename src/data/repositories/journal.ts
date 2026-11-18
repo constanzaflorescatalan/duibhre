@@ -1,7 +1,8 @@
 import { z } from 'zod';
-import type { JournalRecord, NoteKind } from '../../types/domain';
+import type { JournalRecord, MediaAsset, NoteKind } from '../../types/domain';
 import { newId } from '../../utils/ids';
 import { db } from '../db';
+import type { PendingImage } from './entries';
 
 /**
  * Bitácora central. Un registro se crea una sola vez y se vincula a fichas
@@ -67,7 +68,24 @@ export class RecordValidationError extends Error {
   }
 }
 
-export async function saveRecord({ id, input }: { id?: string; input: RecordInput }): Promise<JournalRecord> {
+export interface SaveRecordOptions {
+  id?: string;
+  input: RecordInput;
+  /** Fotos ya guardadas que se conservan (con su `alt` posiblemente editado). */
+  keptMedia?: MediaAsset[];
+  newImages?: PendingImage[];
+}
+
+const blobIdsOf = (media: MediaAsset[]) =>
+  media.flatMap((m) => [m.originalBlobId, m.illustratedBlobId].filter((x): x is string => Boolean(x)));
+
+/** Guarda la memoria y sus fotos en una sola transacción. */
+export async function saveRecord({
+  id,
+  input,
+  keptMedia = [],
+  newImages = [],
+}: SaveRecordOptions): Promise<JournalRecord> {
   const parsed = recordInputSchema.safeParse(input);
   if (!parsed.success) {
     const fieldErrors: Record<string, string> = {};
@@ -77,9 +95,21 @@ export async function saveRecord({ id, input }: { id?: string; input: RecordInpu
   const data = parsed.data;
   const now = new Date().toISOString();
 
-  return db.transaction('rw', db.journal, async () => {
+  return db.transaction('rw', db.journal, db.blobs, async () => {
     const existing = id ? await db.journal.get(id) : undefined;
     if (id && !existing) throw new Error('La memoria que intentas editar ya no existe.');
+
+    const keptIds = new Set(keptMedia.map((m) => m.id));
+    const removed = (existing?.media ?? []).filter((m) => !keptIds.has(m.id));
+    for (const blobId of blobIdsOf(removed)) await db.blobs.delete(blobId);
+
+    const added: MediaAsset[] = [];
+    for (const image of newImages) {
+      const blobId = newId();
+      await db.blobs.add({ id: blobId, blob: image.blob, mimeType: image.blob.type, createdAt: now });
+      added.push({ id: newId(), originalBlobId: blobId, alt: image.alt.trim(), status: 'original' });
+    }
+    const media = [...keptMedia, ...added];
     const record: JournalRecord = {
       id: existing?.id ?? newId(),
       kind: data.kind,
@@ -87,7 +117,8 @@ export async function saveRecord({ id, input }: { id?: string; input: RecordInpu
       body: data.body.trim(),
       date: new Date(data.date).toISOString(),
       linkedEntryIds: [...new Set(data.linkedEntryIds)],
-      mediaIds: existing?.mediaIds ?? [],
+      mediaIds: blobIdsOf(media),
+      media,
       tags: data.tags,
       isPrivate: existing?.isPrivate ?? true,
       isFavorite: existing?.isFavorite ?? false,
@@ -111,15 +142,17 @@ export async function toggleRecordFavorite(id: string): Promise<boolean> {
   });
 }
 
-/** Elimina solo la memoria; las fichas no se tocan y los eventos se desvinculan. */
+/** Elimina la memoria y sus fotos; las fichas no se tocan y los eventos se desvinculan. */
 export async function deleteRecord(id: string): Promise<void> {
-  await db.transaction('rw', db.journal, db.events, async () => {
+  await db.transaction('rw', [db.journal, db.events, db.blobs], async () => {
+    const record = await db.journal.get(id);
     await db.events
       .where('linkedRecordId')
       .equals(id)
       .modify((event) => {
         delete event.linkedRecordId;
       });
+    for (const blobId of blobIdsOf(record?.media ?? [])) await db.blobs.delete(blobId);
     await db.journal.delete(id);
   });
 }

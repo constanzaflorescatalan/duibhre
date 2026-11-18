@@ -29,7 +29,7 @@ Bitácora: memorias (sueños, rituales, tiradas, meditaciones, recuerdos…) que
 
 Respaldo (Perfil → Privacidad y datos): «Exportar mis datos» descarga un JSON con fichas, memorias, eventos e imágenes en base64; «Importar respaldo» lo valida con Zod, muestra qué contiene y pide confirmación antes de reemplazar todo; «Borrar mis datos» exige escribir BORRAR.
 
-Queda para después: fotos dentro de las memorias.
+Las memorias también tienen fotos (tomar o subir, con texto alternativo); se guardan con la memoria, se borran con ella y viajan en el respaldo.
 
 ### Etapa 1 — base navegable
 

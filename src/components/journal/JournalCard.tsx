@@ -1,13 +1,16 @@
 import { ChevronRight, Heart, Link2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { noteKindLabel } from '../../config/noteKinds';
+import { useBlobUrl } from '../../hooks/useBlobUrl';
 import type { JournalRecord } from '../../types/domain';
 import { formatDateTime } from '../../utils/dates';
 
 /** Memoria como pequeña hoja manuscrita (sección 7.10). */
 export function JournalCard({ record }: { record: JournalRecord }) {
+  const photo = useBlobUrl(record.media?.find((m) => m.originalBlobId)?.originalBlobId);
   return (
-    <Link to={`/bitacora/${record.id}`} className="journal-leaf">
+    <Link to={`/bitacora/${record.id}`} className={`journal-leaf${photo ? ' has-photo' : ''}`}>
+      {photo && <img className="journal-leaf__photo" src={photo} alt="" />}
       <span className="journal-leaf__meta">
         <span className="tag">{noteKindLabel(record.kind)}</span>
         <span>{formatDateTime(record.date)}</span>

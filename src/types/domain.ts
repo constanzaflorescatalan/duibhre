@@ -120,7 +120,10 @@ export interface JournalRecord {
   body: string;
   date: string; // ISO local / con zona horaria en persistencia
   linkedEntryIds: string[];
+  /** Ids de los blobs de imagen (derivado de `media`, se conserva por compatibilidad). */
   mediaIds: string[];
+  /** Fotos de la memoria con su texto alternativo. */
+  media?: MediaAsset[];
   tags: string[];
   isPrivate: boolean;
   isFavorite?: boolean;

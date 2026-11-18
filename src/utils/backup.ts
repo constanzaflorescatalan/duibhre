@@ -53,6 +53,7 @@ const recordSchema = z.object({
   date: isoDate,
   linkedEntryIds: z.array(z.string()),
   mediaIds: z.array(z.string()),
+  media: z.array(mediaSchema).optional(),
   tags: z.array(z.string()),
   isPrivate: z.boolean(),
   isFavorite: z.boolean().optional(),

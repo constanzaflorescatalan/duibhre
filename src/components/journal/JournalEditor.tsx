@@ -7,6 +7,7 @@ import { RecordValidationError, saveRecord } from '../../data/repositories/journ
 import type { GrimorioEntry, JournalRecord, NoteKind } from '../../types/domain';
 import { toDateTimeLocalValue, toDateValue } from '../../utils/dates';
 import { ConfirmDialog } from '../common/ConfirmDialog';
+import { PhotoUploader, type FormImage } from '../media/PhotoUploader';
 
 interface FormState {
   kind: NoteKind;
@@ -57,6 +58,11 @@ export function JournalEditor({
     [record, initialLinkedEntryId, initialKind],
   );
   const [state, setState] = useState(initial);
+  const initialImages = useMemo<FormImage[]>(
+    () => (record?.media ?? []).map((m) => ({ key: m.id, kind: 'kept', media: m, alt: m.alt })),
+    [record],
+  );
+  const [images, setImages] = useState<FormImage[]>(initialImages);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [saveError, setSaveError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -65,7 +71,10 @@ export function JournalEditor({
   const leavingRef = useRef(false);
   const titleRef = useRef<HTMLInputElement>(null);
 
-  const dirty = JSON.stringify(state) !== JSON.stringify(initial);
+  const dirty =
+    JSON.stringify(state) !== JSON.stringify(initial) ||
+    JSON.stringify(images.map((i) => [i.key, i.alt])) !==
+      JSON.stringify(initialImages.map((i) => [i.key, i.alt]));
   const blocker = useBlocker(() => dirty && !leavingRef.current);
   useEffect(() => {
     if (!dirty) return;
@@ -101,6 +110,10 @@ export function JournalEditor({
           mood: state.mood.trim() || undefined,
           followUpAt: state.followUp ? `${state.followUp}T09:00` : undefined,
         },
+        keptMedia: images.flatMap((i) => (i.kind === 'kept' ? [{ ...i.media, alt: i.alt.trim() }] : [])),
+        newImages: images.flatMap((i) =>
+          i.kind === 'new' ? [{ tempId: i.key, blob: i.blob, alt: i.alt }] : [],
+        ),
       });
       if (afterSave) await afterSave(saved);
       leavingRef.current = true;
@@ -184,6 +197,11 @@ export function JournalEditor({
           <span className="form-field__label">Etiquetas (separadas por comas)</span>
           <input className="input" value={state.tags} onChange={(e) => set('tags', e.target.value)} />
         </label>
+      </div>
+
+      <div className="form-section">
+        <p className="form-section__heading">Fotos</p>
+        <PhotoUploader images={images} onChange={setImages} />
       </div>
 
       <div className="form-section">

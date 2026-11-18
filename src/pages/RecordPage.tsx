@@ -5,6 +5,7 @@ import { EntryCard } from '../components/chapter/EntryCard';
 import { ConfirmDialog } from '../components/common/ConfirmDialog';
 import { Page } from '../components/common/Page';
 import { Filigree } from '../components/ornaments/Ornaments';
+import { IllustrationPreview } from '../components/media/IllustrationPreview';
 import { noteKindLabel } from '../config/noteKinds';
 import { getEntriesByIds } from '../data/repositories/allEntries';
 import { deleteRecord, getRecord, toggleRecordFavorite } from '../data/repositories/journal';
@@ -108,6 +109,8 @@ export function RecordPage() {
           <p className="muted">Sin texto.</p>
         )}
       </article>
+
+      {(record.media?.length ?? 0) > 0 && <IllustrationPreview media={record.media ?? []} />}
 
       {record.tags.length > 0 && (
         <p className="entry-card__meta">

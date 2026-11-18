@@ -386,3 +386,22 @@
   border-bottom: 1px solid rgba(168, 138, 87, 0.5);
   white-space: pre-wrap;
 }
+
+/* ---------- Fotos en memorias ---------- */
+.journal-leaf.has-photo {
+  padding-left: calc(var(--space-4) + 72px);
+  min-height: 92px;
+}
+
+.journal-leaf__photo {
+  position: absolute;
+  left: var(--space-3);
+  top: var(--space-3);
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 2px;
+  border: 3px solid #fffaf0;
+  box-shadow: 0 1px 4px rgba(53, 43, 36, 0.35);
+  transform: rotate(-3deg);
+}
