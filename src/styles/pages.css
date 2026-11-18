@@ -963,3 +963,39 @@
 .home-card .journal-leaf {
   width: 100%;
 }
+
+/* ---------- Imagen de perfil ---------- */
+.profile-avatar {
+  display: inline-grid;
+  place-items: center;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--antique-gold);
+  outline: 1px solid rgba(168, 138, 87, 0.5);
+  outline-offset: 3px;
+  background: #10241a;
+}
+
+.profile-avatar--empty {
+  color: var(--forest-middle);
+  background: radial-gradient(circle at 40% 35%, #fbf8ef, var(--parchment));
+}
+
+.profile-avatar--header {
+  margin-bottom: var(--space-3);
+  box-shadow: 0 4px 12px rgba(40, 24, 8, 0.35);
+}
+
+.avatar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+  margin: calc(-1 * var(--space-2)) 0 var(--space-4);
+}
+
+.avatar-actions p {
+  flex-basis: 100%;
+  margin: 0;
+  text-align: center;
+}

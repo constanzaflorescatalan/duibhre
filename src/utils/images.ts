@@ -38,3 +38,25 @@ export async function prepareImage(file: File): Promise<PreparedImage> {
     return { ok: true, blob: file };
   }
 }
+
+/** Recorta al centro en un cuadrado de hasta `side` px (JPEG 88 %), para la foto de perfil. */
+export async function prepareSquareImage(file: File, side = 512): Promise<PreparedImage> {
+  const checked = await prepareImage(file);
+  if (!checked.ok) return checked;
+  try {
+    const bitmap = await createImageBitmap(checked.blob);
+    const crop = Math.min(bitmap.width, bitmap.height);
+    const out = Math.min(side, crop);
+    const canvas = document.createElement('canvas');
+    canvas.width = out;
+    canvas.height = out;
+    canvas
+      .getContext('2d')
+      ?.drawImage(bitmap, (bitmap.width - crop) / 2, (bitmap.height - crop) / 2, crop, crop, 0, 0, out, out);
+    bitmap.close();
+    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/jpeg', 0.88));
+    return { ok: true, blob: blob ?? checked.blob };
+  } catch {
+    return checked;
+  }
+}

@@ -159,6 +159,8 @@ export interface Preferences {
   reduceMotion: boolean;
   theme: 'dark-leather';
   preferredIllustrationStyle: IllustrationStyle;
+  /** Foto de perfil guardada en `blobs`; sin ella se muestra la inicial capitular del nombre. */
+  avatarBlobId?: string;
 }
 
 /** Blob local de imagen (foto original o ilustración) guardado en IndexedDB. */

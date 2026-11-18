@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import type { Preferences } from '../../types/domain';
 import { isValidTimeZone } from '../../utils/timezone';
+import { newId } from '../../utils/ids';
 import { db } from '../db';
 
 /** Preferencias del grimorio (sección 11). Por defecto: hemisferio sur, America/Santiago. */
@@ -39,4 +40,35 @@ export async function savePreferences(patch: Partial<Preferences>): Promise<Pref
   };
   await db.preferences.put({ ...clean, id: 'local' });
   return clean;
+}
+
+/** Guarda la foto de perfil (ya preparada) y borra la anterior, en una sola transacción. */
+export async function setAvatar(blob: Blob): Promise<Preferences> {
+  const id = newId();
+  let saved: Preferences = DEFAULT_PREFERENCES;
+  await db.transaction('rw', [db.blobs, db.preferences], async () => {
+    const prefs = await getPreferences();
+    await db.blobs.add({
+      id,
+      blob,
+      mimeType: blob.type || 'image/jpeg',
+      createdAt: new Date().toISOString(),
+    });
+    if (prefs.avatarBlobId) await db.blobs.delete(prefs.avatarBlobId);
+    saved = { ...prefs, avatarBlobId: id };
+    await db.preferences.put({ ...saved, id: 'local' });
+  });
+  return saved;
+}
+
+/** Quita la foto de perfil: vuelve a mostrarse la inicial capitular. */
+export async function removeAvatar(): Promise<Preferences> {
+  let saved: Preferences = DEFAULT_PREFERENCES;
+  await db.transaction('rw', [db.blobs, db.preferences], async () => {
+    const prefs = await getPreferences();
+    if (prefs.avatarBlobId) await db.blobs.delete(prefs.avatarBlobId);
+    saved = { ...prefs, avatarBlobId: undefined };
+    await db.preferences.put({ ...saved, id: 'local' });
+  });
+  return saved;
 }

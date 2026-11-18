@@ -1,6 +1,8 @@
 import { z } from 'zod';
 import { CHAPTERS } from '../config/chapters';
 import { db } from '../data/db';
+import { DEFAULT_PREFERENCES } from '../data/repositories/preferences';
+import { isValidTimeZone } from './timezone';
 import type { CalendarEvent, ChapterId, GrimorioEntry, JournalRecord, StoredBlob } from '../types/domain';
 
 /**
@@ -94,6 +96,15 @@ export const backupSchema = z.object({
     journal: z.array(recordSchema),
     events: z.array(eventSchema),
     blobs: z.array(blobSchema),
+    /** Alias, dedicatoria, zona horaria y foto de perfil (opcional: respaldos antiguos no lo traen). */
+    preferences: z
+      .object({
+        displayName: z.string().max(60).optional(),
+        dedication: z.string().max(500).optional(),
+        timeZone: z.string().optional(),
+        avatarBlobId: z.string().optional(),
+      })
+      .optional(),
   }),
 });
 
@@ -129,11 +140,12 @@ export function base64ToBlob(base64: string, mimeType: string): Blob {
 // ---------- Exportar ----------
 
 export async function buildBackup(): Promise<BackupFile> {
-  const [entries, journal, events, blobs] = await Promise.all([
+  const [entries, journal, events, blobs, prefs] = await Promise.all([
     db.entries.toArray(),
     db.journal.toArray(),
     db.events.toArray(),
     db.blobs.toArray(),
+    db.preferences.get('local'),
   ]);
   return {
     app: BACKUP_APP,
@@ -151,6 +163,14 @@ export async function buildBackup(): Promise<BackupFile> {
           dataBase64: await blobToBase64(b.blob),
         })),
       ),
+      preferences: prefs
+        ? {
+            displayName: prefs.displayName,
+            dedication: prefs.dedication,
+            timeZone: prefs.timeZone,
+            avatarBlobId: prefs.avatarBlobId,
+          }
+        : undefined,
     },
   };
 }
@@ -223,12 +243,29 @@ export async function restoreBackup(backup: BackupFile): Promise<void> {
     createdAt: b.createdAt,
     blob: base64ToBlob(b.dataBase64, b.mimeType),
   }));
-  await db.transaction('rw', [db.entries, db.journal, db.events, db.blobs], async () => {
+  const restoredPrefs = backup.data.preferences;
+  await db.transaction('rw', [db.entries, db.journal, db.events, db.blobs, db.preferences], async () => {
     await Promise.all([db.entries.clear(), db.journal.clear(), db.events.clear(), db.blobs.clear()]);
     await db.entries.bulkAdd(backup.data.entries as GrimorioEntry[]);
     await db.journal.bulkAdd(backup.data.journal as JournalRecord[]);
     await db.events.bulkAdd(backup.data.events as CalendarEvent[]);
     await db.blobs.bulkAdd(blobs);
+    if (restoredPrefs) {
+      const current = await db.preferences.get('local');
+      const avatarOk = restoredPrefs.avatarBlobId && blobs.some((b) => b.id === restoredPrefs.avatarBlobId);
+      await db.preferences.put({
+        ...DEFAULT_PREFERENCES,
+        ...current,
+        displayName: restoredPrefs.displayName,
+        dedication: restoredPrefs.dedication,
+        timeZone:
+          restoredPrefs.timeZone && isValidTimeZone(restoredPrefs.timeZone)
+            ? restoredPrefs.timeZone
+            : (current?.timeZone ?? DEFAULT_PREFERENCES.timeZone),
+        avatarBlobId: avatarOk ? restoredPrefs.avatarBlobId : undefined,
+        id: 'local',
+      });
+    }
   });
 }
 
