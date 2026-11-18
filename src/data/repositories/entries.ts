@@ -164,13 +164,19 @@ export async function setArchived(id: string, archived: boolean): Promise<void> 
 }
 
 /**
- * Elimina la ficha y sus imágenes. Las memorias de la Bitácora vinculadas se
+ * Elimina la ficha y sus imágenes. Las memorias y eventos vinculados se
  * conservan: solo se desvinculan de esta ficha.
  */
 export async function deleteEntry(id: string): Promise<void> {
-  await db.transaction('rw', db.entries, db.blobs, db.journal, async () => {
+  await db.transaction('rw', [db.entries, db.blobs, db.journal, db.events], async () => {
     const entry = await db.entries.get(id);
     if (!entry) return;
+    await db.events
+      .where('linkedEntryId')
+      .equals(id)
+      .modify((event) => {
+        delete event.linkedEntryId;
+      });
     await db.journal
       .where('linkedEntryIds')
       .equals(id)

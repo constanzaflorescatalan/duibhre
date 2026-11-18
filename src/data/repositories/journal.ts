@@ -111,7 +111,15 @@ export async function toggleRecordFavorite(id: string): Promise<boolean> {
   });
 }
 
-/** Elimina solo la memoria; las fichas vinculadas no se tocan. */
+/** Elimina solo la memoria; las fichas no se tocan y los eventos se desvinculan. */
 export async function deleteRecord(id: string): Promise<void> {
-  await db.journal.delete(id);
+  await db.transaction('rw', db.journal, db.events, async () => {
+    await db.events
+      .where('linkedRecordId')
+      .equals(id)
+      .modify((event) => {
+        delete event.linkedRecordId;
+      });
+    await db.journal.delete(id);
+  });
 }

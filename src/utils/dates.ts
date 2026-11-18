@@ -38,3 +38,6 @@ export function toDateValue(date: Date): string {
 export function formatDateTime(iso: string): string {
   return format(new Date(iso), "d 'de' MMMM 'de' yyyy, HH:mm", { locale: es });
 }
+
+/** Día civil local «YYYY-MM-DD» de una fecha del calendario. */
+export const dayKey = (d: Date) => format(d, 'yyyy-MM-dd');
