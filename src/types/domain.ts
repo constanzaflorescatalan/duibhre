@@ -153,7 +153,7 @@ export interface CalendarEvent {
 export interface Preferences {
   displayName?: string;
   dedication?: string;
-  hemisphere: 'south' | 'north';
+  hemisphere: Hemisphere;
   timeZone: string; // por defecto America/Santiago; editable
   locale: 'es-CL';
   reduceMotion: boolean;
@@ -168,3 +168,5 @@ export interface StoredBlob {
   mimeType: string;
   createdAt: string;
 }
+
+export type Hemisphere = 'south' | 'north';

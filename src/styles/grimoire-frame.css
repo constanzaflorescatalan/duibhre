@@ -483,3 +483,207 @@
 .dedication-page__empty {
   max-width: 32ch;
 }
+
+/* ---------- Cielo en el calendario: lunas, sabbats, esbats, luna vacía ---------- */
+.calendar__day {
+  align-content: start;
+  gap: 1px;
+  padding: 4px 1px 9px;
+  min-height: 58px;
+}
+
+.calendar__num {
+  line-height: 1.1;
+}
+
+.calendar__moon {
+  display: block;
+}
+
+.calendar__sky-label {
+  max-width: 100%;
+  overflow: hidden;
+  font-family: var(--font-display-alt, 'IM Fell English', serif);
+  font-size: 0.58rem;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.calendar__day.is-sabbat {
+  background: rgba(201, 160, 72, 0.28);
+  border-color: #b08a3e;
+}
+
+.calendar__day.is-sabbat .calendar__sky-label {
+  color: #6b4a12;
+  font-weight: 700;
+}
+
+.calendar__day.is-esbat {
+  box-shadow: inset 0 0 0 2px rgba(110, 86, 150, 0.55);
+}
+
+.calendar__day.is-esbat .calendar__sky-label {
+  color: #4f3b74;
+}
+
+.calendar__day.is-sabbat.is-esbat {
+  box-shadow: inset 0 0 0 2px rgba(110, 86, 150, 0.55);
+}
+
+.calendar__day.is-selected .calendar__sky-label {
+  color: var(--paper-light);
+}
+
+/* Luna vacía de curso: franja rayada al pie del día. */
+.calendar__voc {
+  position: absolute;
+  left: 3px;
+  right: 3px;
+  bottom: 1px;
+  height: 3px;
+  border-radius: 2px;
+  background: repeating-linear-gradient(90deg, #8b3a2e 0 4px, transparent 4px 7px);
+}
+
+.calendar__day .calendar__dots {
+  bottom: 5px;
+}
+
+/* ---------- Barra superior de la agenda ---------- */
+.agenda-switch {
+  display: inline-flex;
+  margin: 0 auto var(--space-3);
+  padding: 3px;
+  border: 1px solid rgba(168, 138, 87, 0.75);
+  border-radius: 999px;
+  background: rgba(38, 25, 14, 0.08);
+}
+
+.agenda-switch__btn {
+  min-width: 84px;
+  min-height: 38px;
+  padding: 0 var(--space-4);
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-brown);
+  font-family: var(--font-ui);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.agenda-switch__btn.is-active {
+  background: var(--forest-middle);
+  color: var(--paper-light);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.agenda-top {
+  display: grid;
+  justify-items: center;
+}
+
+.agenda-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+/* ---------- Casillas de capas del cielo ---------- */
+.sky-layers {
+  margin: 0 0 var(--space-3);
+  padding: var(--space-2) var(--space-3) var(--space-3);
+  border: 1px solid rgba(168, 138, 87, 0.6);
+  border-radius: var(--radius-sm);
+}
+
+.sky-layers legend {
+  padding: 0 var(--space-2);
+  font-family: var(--font-display-alt, 'IM Fell English', serif);
+  font-size: 1rem;
+}
+
+.sky-layers__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2) var(--space-3);
+}
+
+.sky-layers__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 36px;
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.sky-layers__item input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--forest-middle);
+}
+
+.sky-layers__swatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  flex: none;
+}
+
+/* ---------- Cielo del día ---------- */
+.sky-day {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-3);
+  padding: 0;
+  list-style: none;
+}
+
+.sky-day__item {
+  display: grid;
+  grid-template-columns: 26px 1fr;
+  gap: var(--space-2);
+  align-items: start;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid rgba(168, 138, 87, 0.55);
+  border-radius: var(--radius-sm);
+  background: rgba(250, 244, 230, 0.45);
+}
+
+.sky-day__item--sabbat {
+  border-left: 5px solid #b08a3e;
+}
+
+.sky-day__item--esbat {
+  border-left: 5px solid #6e5696;
+}
+
+.sky-day__item--voc {
+  border-left: 5px solid #8b3a2e;
+  background: rgba(139, 58, 46, 0.08);
+}
+
+.sky-day__title {
+  margin: 0;
+  font-family: var(--font-display-alt, 'IM Fell English', serif);
+  font-size: 1.05rem;
+}
+
+.sky-day__text {
+  margin: 2px 0 0;
+  font-size: 0.92rem;
+}
+
+.sky-day__note {
+  margin: 2px 0 0;
+  font-size: 0.78rem;
+  font-style: italic;
+  opacity: 0.8;
+}

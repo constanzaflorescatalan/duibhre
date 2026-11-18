@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import { beforeEach, describe, expect, it } from 'vitest';
@@ -149,5 +149,29 @@ describe('flujo de la sección 10', () => {
 
     await router.navigate(eventPath);
     expect(await screen.findByText('La luna salió entre nubes')).toBeInTheDocument();
+  });
+});
+
+describe('cielo de la agenda', () => {
+  it('Hoy/Mes funciona como interruptor y las casillas encienden las capas del cielo', async () => {
+    renderAt('/agenda');
+    const mes = await screen.findByRole('button', { name: 'Mes' });
+    expect(mes).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('link', { name: /Agregar recordatorio/ })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Nuevo evento/ })).toBeInTheDocument();
+
+    const lunas = screen.getByRole('checkbox', { name: /Fases de la luna/ });
+    expect(lunas).not.toBeChecked();
+    expect(document.querySelectorAll('.calendar__moon')).toHaveLength(0);
+    await userEvent.click(lunas);
+    await waitFor(() => expect(document.querySelectorAll('.calendar__moon').length).toBeGreaterThanOrEqual(28));
+    expect(screen.getByRole('checkbox', { name: /Esbats/ })).toBeInTheDocument();
+    expect(screen.getByRole('checkbox', { name: /Sabbats/ })).toBeInTheDocument();
+    expect(screen.getByRole('checkbox', { name: /Luna vacía de curso/ })).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole('button', { name: 'Hoy' }));
+    expect(screen.getByRole('button', { name: 'Hoy' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.queryByRole('grid')).not.toBeInTheDocument();
+    expect(await screen.findByRole('list', { name: 'El cielo de este día' })).toBeInTheDocument();
   });
 });
