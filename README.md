@@ -7,7 +7,21 @@ Proyecto de diseño UX/UI + front-end (portafolio) y grimorio de uso personal.
 - Interfaz en español de Chile (`es-CL`), **mobile-first**, preparada para evolucionar a PWA.
 - Especificación completa: [`docs/especificacion-maestra.md`](docs/especificacion-maestra.md).
 
-## Estado: Etapa 2 completa — guardado local
+## Estado: Etapa 3 completa — agenda vinculada
+
+- **Eventos y recordatorios propios** (`/crear/evento`, `/agenda/eventos/:id`, `/agenda/eventos/:id/editar`): tipo
+  (ritual, sabbat, esbat, fase lunar, cuidado de plantas, tarea, recordatorio, personal), inicio y término, zona
+  horaria, ficha y memoria vinculadas, notas y recordatorio anotado (sin notificaciones automáticas).
+- **Agenda** mensual con puntos de color por tipo, detalle del día y lista del mes. Las fechas próximas de las
+  memorias aparecen marcadas sin copiarlas.
+- **Flujo de la sección 10:** ficha → «Vincular al calendario» → evento → «Registrar cómo resultó» → la memoria
+  queda vinculada al evento y a la ficha, y aparece en la Bitácora una sola vez.
+- **Borrado seguro:** borrar una ficha o una memoria solo desvincula sus eventos; borrar un evento no toca nada más.
+- **Zonas horarias explícitas:** los eventos se guardan en UTC con su zona y se muestran en ella
+  (por defecto `America/Santiago`). Hemisferio, zona horaria, alias y dedicatoria se editan en Perfil.
+- La app **no calcula** sabbats ni fases lunares: se agendan a mano desde una fuente confiable.
+
+## Etapa 2 — guardado local
 
 Ya funciona: crear, editar, guardar como borrador, marcar favoritas, archivar y eliminar fichas propias; copiar fichas de ejemplo a «Mis fichas»; tomar o subir fotos con texto alternativo editable. Todo se guarda en IndexedDB y persiste al recargar.
 
