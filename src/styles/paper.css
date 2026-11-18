@@ -31,7 +31,8 @@
   --doodle-band: min(100%, 560px);
   background:
     url('/textures/garabatos-arriba.png') left top var(--doodle-top) / min(80%, 448px) auto no-repeat,
-    url('/textures/garabatos-abajo.png') center bottom var(--doodle-bottom) / var(--doodle-band) auto no-repeat,
+    url('/textures/garabatos-abajo.png') center bottom var(--doodle-bottom) / var(--doodle-band) auto
+      no-repeat,
     url('/textures/garabatos-izquierda.png') left top calc(var(--doodle-top) + min(21vw, 116px)) / auto
       calc(100% - var(--doodle-top) - var(--doodle-bottom) - min(43vw, 236px)) no-repeat,
     url('/textures/garabatos-derecha.png') right top var(--doodle-top) / auto
