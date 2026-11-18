@@ -21,6 +21,16 @@ Proyecto de diseño UX/UI + front-end (portafolio) y grimorio de uso personal.
   (por defecto `America/Santiago`). Hemisferio, zona horaria, alias y dedicatoria se editan en Perfil.
 - La app **no calcula** sabbats ni fases lunares: se agendan a mano desde una fuente confiable.
 
+### Estilo de hoja (revisión de la autora)
+
+- **Portada:** el libro aprobado ocupa toda la pantalla y se ve completo; en celulares se intercala cuero liso
+  de la propia tapa para llenar la altura sin recortar el título. No hay botón: **la triquetra abre el grimorio**.
+- **Cabecera:** usa el título recortado de la portada (D capitular, «DUIBHRÉ» y «Grimorio de un alma»),
+  idéntico al de la tapa.
+- **Interior:** todo, salvo la barra inferior, es una sola hoja de pergamino envejecido sin marcos ni contornos.
+  La textura es procedural (`public/textures/pergamino.svg`): manchas, fibras, bordes quemados y anotaciones
+  tenues. Se puede reemplazar por una textura real (generada aparte) con el mismo nombre.
+
 ### Detalles pulidos
 
 - Fichas relacionadas: se eligen en el formulario y se ven en ambos sentidos (también desde las fichas de ejemplo).

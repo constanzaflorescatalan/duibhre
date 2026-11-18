@@ -1,5 +1,6 @@
 import { ArrowLeft, Search, UserRound } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
+import titleArt from '../../assets/cover/titulo-duibhre.jpg';
 import { UI } from '../../config/uiCopy';
 import { useBack } from '../../hooks/useBack';
 import { ROOT_PATHS, logicalParent } from '../../utils/navigation';
@@ -21,8 +22,8 @@ export function TopBar() {
         )}
       </div>
 
-      <Link to="/inicio" className="topbar__brand" aria-label={`${UI.appName}, ir a Inicio`}>
-        {UI.appName}
+      <Link to="/inicio" className="topbar__brand" aria-label={`${UI.appName}, ${UI.tagline}: ir a Inicio`}>
+        <img className="topbar__title" src={titleArt} alt="" width={800} height={290} />
       </Link>
 
       <div className="topbar__side topbar__side--end">

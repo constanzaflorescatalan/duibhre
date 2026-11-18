@@ -109,7 +109,14 @@ export function FamilyWheel({ selected, onSelect }: Props) {
         </defs>
 
         {/* Aro exterior de oro antiguo */}
-        <circle cx={C} cy={C} r={R_OUTER + 5} fill="#12261d" stroke="#c9ab72" strokeWidth="2.2" />
+        <circle
+          cx={C}
+          cy={C}
+          r={R_OUTER + 5}
+          fill="rgba(92, 62, 28, 0.14)"
+          stroke="#a88a57"
+          strokeWidth="2.2"
+        />
         <circle cx={C} cy={C} r={R_OUTER + 1.5} fill="none" stroke="#7d6538" strokeWidth="1" />
 
         {FAMILIES.map((family, i) => {

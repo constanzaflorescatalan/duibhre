@@ -1,0 +1,174 @@
+/*
+ * Interior como una sola hoja de pergamino envejecido (pedido de la autora):
+ * todo, salvo la barra inferior y la cabecera con el título, es la hoja.
+ * Sin marcos ni contornos. La textura vive en /textures/pergamino.svg y se
+ * puede reemplazar por una imagen real con el mismo nombre.
+ */
+
+:root {
+  --paper-texture: url('/textures/pergamino.svg');
+  --ink-line: rgba(92, 60, 28, 0.38);
+  --ink-wash: rgba(255, 246, 222, 0.22);
+}
+
+.app-shell {
+  position: relative;
+  isolation: isolate;
+}
+
+.paper-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    var(--paper-texture) center / 100% 100% no-repeat,
+    #e6d1a6;
+  pointer-events: none;
+}
+
+/* ---------- Cabecera: el título idéntico al de la portada ---------- */
+.topbar {
+  height: calc(76px + env(safe-area-inset-top));
+  background: radial-gradient(ellipse at 50% 60%, rgba(40, 74, 52, 0.55), transparent 70%), #0f2219;
+  border-bottom: 2px solid var(--antique-gold);
+  box-shadow:
+    0 1px 0 rgba(168, 138, 87, 0.35),
+    0 6px 16px rgba(40, 24, 8, 0.35);
+}
+
+.topbar__brand {
+  display: flex;
+  justify-content: center;
+  padding: 4px 0;
+}
+
+.topbar__title {
+  width: auto;
+  height: 64px;
+  max-width: 62vw;
+  object-fit: contain;
+  -webkit-mask-image: radial-gradient(ellipse 54% 62% at 50% 50%, #000 70%, transparent 100%);
+  mask-image: radial-gradient(ellipse 54% 62% at 50% 50%, #000 70%, transparent 100%);
+}
+
+/* ---------- La hoja: sin marco ni contorno ---------- */
+.page-frame {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+
+.page-frame::before,
+.page-frame__corner,
+.page__corner,
+.leather-page__corner {
+  display: none;
+}
+
+.page,
+.page-frame > .page {
+  border: 0;
+  border-radius: 0;
+  outline: none;
+  background: none;
+  box-shadow: none;
+  padding: var(--space-5) var(--space-2) var(--space-6);
+}
+
+.app-main {
+  padding-inline: var(--space-3);
+}
+
+/* ---------- Elementos dibujados sobre la hoja ---------- */
+.entry-card,
+.home-card,
+.form-section,
+.calendar,
+.empty-state,
+.stage-notice,
+.event-card,
+.path-tile,
+.subtopic-chip,
+.media-card,
+.illustration__frame,
+.stats div,
+.chip,
+.search-field,
+.select-field,
+.search-pill {
+  background: var(--ink-wash);
+  border-color: var(--ink-line);
+  outline: none;
+  box-shadow: none;
+}
+
+.empty-state {
+  border-style: dashed;
+}
+
+.input {
+  background: rgba(255, 249, 232, 0.55);
+  border-color: var(--ink-line);
+}
+
+.chip.is-active {
+  background: var(--forest-middle);
+  border-color: var(--forest-deep);
+}
+
+.content-note {
+  background: rgba(120, 82, 34, 0.08);
+}
+
+.section-title,
+.page-header__title,
+.home-card__title,
+.entry-card__title {
+  color: #2b3a26;
+}
+
+/* ---------- Índice sobre la hoja ---------- */
+.leather-page {
+  padding: var(--space-2) 0 var(--space-5);
+  border: 0;
+  border-radius: 0;
+  outline: none;
+  background: none;
+  box-shadow: none;
+  color: var(--ink-brown);
+}
+
+.leather-header__title {
+  color: #2b3a26;
+  text-shadow: none;
+}
+
+.leather-header__subtitle {
+  color: var(--ink-soft);
+}
+
+.leather-page .search-pill {
+  color: var(--ink-soft);
+}
+
+.leather-page .index-toggle {
+  color: var(--forest-deep);
+  border-color: var(--ink-line);
+}
+
+.leather-page .wheel {
+  filter: drop-shadow(0 6px 10px rgba(70, 44, 16, 0.3));
+}
+
+.leather-page .family-panel {
+  box-shadow:
+    inset 0 0 26px rgba(120, 82, 34, 0.4),
+    inset 0 0 3px rgba(90, 60, 20, 0.5),
+    0 6px 16px rgba(70, 44, 16, 0.3);
+}
+
+.leather-page .paper-card {
+  background: var(--ink-wash);
+}
