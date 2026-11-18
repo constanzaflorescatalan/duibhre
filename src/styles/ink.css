@@ -1,0 +1,91 @@
+/*
+ * Texto como tinta sobre el pergamino: tono sepia casi negro, un leve
+ * sangrado de la tinta en el papel y fusión (multiply) con la textura, de modo
+ * que letras y dibujos parezcan absorbidos por la hoja. Los títulos usan
+ * IM Fell English (licencia SIL OFL), una tipografía de imprenta antigua con
+ * la irregularidad propia de la tinta.
+ */
+
+:root {
+  --ink: #26190e;
+  --ink-soft-2: #4a3523;
+  --ink-faded: #6b5038;
+  --font-ink: 'IM Fell English', 'Cormorant Garamond', Georgia, serif;
+}
+
+/* La hoja entera se funde con el papel: los claros desaparecen y la tinta se oscurece. */
+.app-main {
+  mix-blend-mode: multiply;
+  color: var(--ink);
+}
+
+.app-main :where(p, li, dd, dt, label, span, blockquote, figcaption, h1, h2, h3, a:not(.btn)) {
+  text-shadow:
+    0 0 0.6px rgba(38, 25, 14, 0.55),
+    0.3px 0.2px 0.4px rgba(38, 25, 14, 0.25);
+}
+
+.page-header__title,
+.leather-header__title,
+.family-panel__title,
+.dedication-page__title {
+  font-family: var(--font-ink);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+}
+
+.page-header__title,
+.leather-header__title {
+  font-size: clamp(1.7rem, 7vw, 2.4rem);
+}
+
+.section-title,
+.home-card__title,
+.entry-card__title,
+.chapter-card__title,
+.event-card__title,
+.subtopic-title,
+.index-list__family-title,
+.calendar__month {
+  font-family: var(--font-ink);
+  font-weight: 400;
+  color: var(--ink);
+}
+
+.page-header__subtitle,
+.leather-header__subtitle,
+.family-panel__subtitle,
+.chapter-card__subtitle,
+.entry-card__desc,
+.muted,
+.content-note,
+.journal-leaf__excerpt,
+.home-card__text {
+  color: var(--ink-soft-2);
+}
+
+.page-header__eyebrow,
+.field-list__item dt,
+.journal-leaf__meta,
+.event-card__time {
+  color: var(--ink-faded);
+}
+
+.leather-page .wheel__label {
+  font-family: var(--font-ink);
+  font-weight: 400;
+  font-style: italic;
+  fill: var(--ink);
+}
+
+.wheel__keywords {
+  fill: var(--ink-soft-2);
+}
+
+/* Los controles siguen siendo legibles: botones oscuros y campos claros. */
+.app-main .btn,
+.app-main .input,
+.app-main .tag {
+  text-shadow: none;
+}

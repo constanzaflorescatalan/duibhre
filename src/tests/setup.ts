@@ -1,7 +1,10 @@
 import 'fake-indexeddb/auto';
 import '@testing-library/jest-dom/vitest';
-import { cleanup } from '@testing-library/react';
+import { cleanup, configure } from '@testing-library/react';
 import { afterEach } from 'vitest';
+
+// Con muchos archivos en paralelo, IndexedDB simulado puede tardar más de 1 s en responder.
+configure({ asyncUtilTimeout: 5000 });
 
 // Almacenamiento en memoria: el localStorage global de Node 25 no es utilizable en tests.
 class MemoryStorage implements Storage {

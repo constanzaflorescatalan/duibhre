@@ -92,13 +92,6 @@ export function FamilyWheel({ selected, onSelect }: Props) {
             <stop offset="45%" stopColor="#c9df9e" />
             <stop offset="100%" stopColor="#7fae58" />
           </radialGradient>
-          <radialGradient id="artFade" cx="50%" cy="50%" r="50%">
-            <stop offset="62%" stopColor="#fff" />
-            <stop offset="100%" stopColor="#000" />
-          </radialGradient>
-          <mask id="artMask" maskContentUnits="objectBoundingBox">
-            <rect width="1" height="1" fill="url(#artFade)" />
-          </mask>
           <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
             <feGaussianBlur stdDeviation="3.5" result="b" />
             <feMerge>
@@ -156,7 +149,6 @@ export function FamilyWheel({ selected, onSelect }: Props) {
                 width={IMG_W}
                 height={IMG_H}
                 preserveAspectRatio="xMidYMid slice"
-                mask="url(#artMask)"
                 aria-hidden="true"
               />
               <text className="wheel__label" x={c.x} y={c.y + 25} textAnchor="middle">

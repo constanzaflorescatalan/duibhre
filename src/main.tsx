@@ -8,6 +8,8 @@ import '@fontsource/cormorant-garamond/600.css';
 import '@fontsource/cormorant-garamond/400-italic.css';
 import '@fontsource/cormorant-garamond/600-italic.css';
 import '@fontsource/crimson-text/400-italic.css';
+import '@fontsource/im-fell-english/400.css';
+import '@fontsource/im-fell-english/400-italic.css';
 import '@fontsource/dm-sans/400.css';
 import '@fontsource/dm-sans/500.css';
 import './styles/tokens.css';
@@ -18,6 +20,7 @@ import './styles/pages.css';
 import './styles/index-wheel.css';
 import './styles/grimoire-frame.css';
 import './styles/paper.css';
+import './styles/ink.css';
 import { App } from './app/App';
 import { applyReduceMotion } from './utils/accessibility';
 

@@ -29,7 +29,8 @@
 /* ---------- Cabecera: el título idéntico al de la portada ---------- */
 .topbar {
   height: calc(76px + env(safe-area-inset-top));
-  background: radial-gradient(ellipse at 50% 60%, rgba(40, 74, 52, 0.55), transparent 70%), #0f2219;
+  /* El mismo cuero verde de la portada, recortado de la tapa aprobada. */
+  background: url('../assets/cover/cuero-portada.jpg') center / cover #0e1f16;
   border-bottom: 2px solid var(--antique-gold);
   box-shadow:
     0 1px 0 rgba(168, 138, 87, 0.35),
@@ -47,8 +48,8 @@
   height: 64px;
   max-width: 62vw;
   object-fit: contain;
-  -webkit-mask-image: radial-gradient(ellipse 54% 62% at 50% 50%, #000 70%, transparent 100%);
-  mask-image: radial-gradient(ellipse 54% 62% at 50% 50%, #000 70%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 60% 78% at 50% 50%, #000 66%, transparent 100%);
+  mask-image: radial-gradient(ellipse 60% 78% at 50% 50%, #000 66%, transparent 100%);
 }
 
 /* ---------- La hoja: sin marco ni contorno ---------- */

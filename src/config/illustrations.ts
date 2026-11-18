@@ -1,10 +1,10 @@
 import type { ChapterId, FamilyId } from '../types/domain';
-import adivinacion from '../assets/illustrations/familias/adivinacion.jpg';
-import alquimia from '../assets/illustrations/familias/alquimia.jpg';
-import cosmos from '../assets/illustrations/familias/cosmos.jpg';
-import espiritu from '../assets/illustrations/familias/espiritu.jpg';
-import memorias from '../assets/illustrations/familias/memorias.jpg';
-import naturaleza from '../assets/illustrations/familias/naturaleza.jpg';
+import adivinacion from '../assets/illustrations/familias/adivinacion.png';
+import alquimia from '../assets/illustrations/familias/alquimia.png';
+import cosmos from '../assets/illustrations/familias/cosmos.png';
+import espiritu from '../assets/illustrations/familias/espiritu.png';
+import memorias from '../assets/illustrations/familias/memorias.png';
+import naturaleza from '../assets/illustrations/familias/naturaleza.png';
 import panelNaturaleza from '../assets/illustrations/familias/panel-naturaleza.jpg';
 import capColores from '../assets/illustrations/capitulos/colores.jpg';
 import capGemas from '../assets/illustrations/capitulos/gemas.jpg';
@@ -12,8 +12,8 @@ import capHerbolaria from '../assets/illustrations/capitulos/herbolaria.jpg';
 
 /**
  * Ilustraciones pintadas recortadas de la imagen aprobada del índice
- * (`03_Indice_Movil_Rueda_6_Familias_ELEGIDA.png`). Son provisionales y de baja
- * resolución: se reemplazan por láminas definitivas generadas aparte (ver
+ * (`03_Indice_Movil_Rueda_6_Familias_ELEGIDA.png`). Las de familia están aisladas
+ * (solo el objeto, fondo transparente). Son provisionales y de baja resolución: se reemplazan por láminas definitivas generadas aparte (ver
  * docs/ilustraciones-pendientes.md) sin cambiar los componentes.
  */
 export const FAMILY_ART: Record<FamilyId, { src: string; alt: string }> = {
