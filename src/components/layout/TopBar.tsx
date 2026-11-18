@@ -5,7 +5,7 @@ import { UI } from '../../config/uiCopy';
 import { useBack } from '../../hooks/useBack';
 import { ROOT_PATHS, logicalParent } from '../../utils/navigation';
 
-/** Cabecera discreta: volver (fuera de destinos raíz), marca, búsqueda y perfil. */
+/** Cabecera discreta: volver (fuera de destinos raíz), marca (lleva a la portada), búsqueda y perfil. */
 export function TopBar() {
   const { pathname } = useLocation();
   const isRoot = ROOT_PATHS.includes(pathname);
@@ -22,7 +22,7 @@ export function TopBar() {
         )}
       </div>
 
-      <Link to="/inicio" className="topbar__brand" aria-label={`${UI.appName}, ${UI.tagline}: ir a Inicio`}>
+      <Link to="/" className="topbar__brand" aria-label={`${UI.appName}, ${UI.tagline}: volver a la portada`}>
         <img className="topbar__title" src={titleArt} alt="" width={800} height={290} />
       </Link>
 
