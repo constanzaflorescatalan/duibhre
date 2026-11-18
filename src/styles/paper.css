@@ -20,8 +20,22 @@
   position: fixed;
   inset: 0;
   z-index: -1;
+  /*
+   * Dibujos a pluma hechos a mano (generados en ChatGPT y convertidos a tinta
+   * transparente), repartidos en cuatro tiras para que no se corten ni se
+   * deformen en ninguna pantalla: arriba bajo la cabecera, abajo sobre la
+   * navbar y columnas a izquierda y derecha.
+   */
+  --doodle-top: calc(80px + env(safe-area-inset-top));
+  --doodle-bottom: calc(88px + env(safe-area-inset-bottom));
+  --doodle-band: min(100%, 560px);
   background:
-    url('/textures/adornos.svg') center / cover no-repeat,
+    url('/textures/garabatos-arriba.png') left top var(--doodle-top) / min(80%, 448px) auto no-repeat,
+    url('/textures/garabatos-abajo.png') center bottom var(--doodle-bottom) / var(--doodle-band) auto no-repeat,
+    url('/textures/garabatos-izquierda.png') left top calc(var(--doodle-top) + min(21vw, 116px)) / auto
+      calc(100% - var(--doodle-top) - var(--doodle-bottom) - min(43vw, 236px)) no-repeat,
+    url('/textures/garabatos-derecha.png') right top var(--doodle-top) / auto
+      calc(100% - var(--doodle-top) - var(--doodle-bottom) - min(21vw, 118px)) no-repeat,
     var(--paper-texture) center / 100% 100% no-repeat,
     #eddcb8;
   pointer-events: none;
