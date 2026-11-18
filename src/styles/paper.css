@@ -21,8 +21,9 @@
   inset: 0;
   z-index: -1;
   background:
+    url('/textures/adornos.svg') center / cover no-repeat,
     var(--paper-texture) center / 100% 100% no-repeat,
-    #e6d1a6;
+    #eddcb8;
   pointer-events: none;
 }
 

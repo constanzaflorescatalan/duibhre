@@ -7,9 +7,9 @@
  */
 
 :root {
-  --ink: #26190e;
-  --ink-soft-2: #4a3523;
-  --ink-faded: #6b5038;
+  --ink: #1a0f06;
+  --ink-soft-2: #33220f;
+  --ink-faded: #4f3a24;
   --font-ink: 'IM Fell English', 'Cormorant Garamond', Georgia, serif;
 }
 
@@ -21,8 +21,8 @@
 
 .app-main :where(p, li, dd, dt, label, span, blockquote, figcaption, h1, h2, h3, a:not(.btn)) {
   text-shadow:
-    0 0 0.6px rgba(38, 25, 14, 0.55),
-    0.3px 0.2px 0.4px rgba(38, 25, 14, 0.25);
+    0 0 0.5px rgba(26, 15, 6, 0.45),
+    0.3px 0.2px 0.3px rgba(26, 15, 6, 0.2);
 }
 
 .page-header__title,
